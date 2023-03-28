@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2019", "dom"],
+    "module": "commonjs",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "pretty": true,
+    "sourceMap": true,
+    "strict": false,
+    "target": "es2018",
+    "baseUrl": "./",
+    "typeRoots": ["types", "node_modules/@types"],
+    "jsx": "react",
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules"]
+}
