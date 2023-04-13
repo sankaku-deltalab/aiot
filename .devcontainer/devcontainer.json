@@ -22,14 +22,15 @@
         "bierner.markdown-mermaid",
         "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
         "wayou.vscode-todo-highlight",
-        "shardulm94.trailing-spaces"
+        "shardulm94.trailing-spaces",
+        "streetsidesoftware.code-spell-checker"
       ]
     }
   },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // This can be used to network with other containers or with the host.
-  "forwardPorts": [4000, 4001, 5432],
+  "forwardPorts": [],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "mix deps.get"

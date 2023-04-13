@@ -29,7 +29,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: hunt_cutdown_dev
+      POSTGRES_DB: app
 
 volumes:
   postgres-data:
