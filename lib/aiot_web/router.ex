@@ -17,7 +17,8 @@ defmodule AiotWeb.Router do
   scope "/", AiotWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    # get "/", PageController, :home
+    live "/", GamePageLive.Index, :index
   end
 
   # Other scopes may use custom stacks.

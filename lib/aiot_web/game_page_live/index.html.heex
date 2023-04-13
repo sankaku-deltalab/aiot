@@ -1,0 +1,26 @@
+<div>
+  <div id="cs" phx-update="ignore" phx-hook="ClientSider"></div>
+</div>
+
+<div class="fixed flex flex-col justify-around justify-items-center items-center w-screen h-screen bg-base-200">
+  <%= case @state do %>
+    <% :top -> %>
+      <div class="text-5xl">Aiot</div>
+      <div>
+        <button class="btn btn-sm" phx-click="open_menu_from_top">Open menu</button>
+        <button class="btn btn-sm" phx-click="start_game">Start Game</button>
+      </div>
+    <% :menu -> %>
+      <p>menu</p>
+      <button class="btn btn-sm" phx-click="start_game">Start Game</button>
+    <% :in_game -> %>
+      <p>game now</p>
+      <button class="btn btn-sm" phx-click="end_game">End Game instead of client</button>
+    <% :show_result -> %>
+      <p>show result</p>
+      <div>
+        <button class="btn btn-sm" phx-click="restart_game_from_result">Restart</button>
+        <button class="btn btn-sm" phx-click="back_to_menu_from_result">Back to menu</button>
+      </div>
+  <% end %>
+</div>
