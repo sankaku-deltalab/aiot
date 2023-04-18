@@ -1,5 +1,6 @@
+import {TTypedViewHook} from 'typed-phoenix-live-view-hook';
 import {ClientSider} from './client-sider';
 
 export const Hooks = {
-  ClientSider: ClientSider.asHook(),
+  ClientSider: TTypedViewHook.createHookWithModifier(new ClientSider()),
 };
