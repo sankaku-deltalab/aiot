@@ -1,9 +1,11 @@
 import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
 import nopSlice from '../features/nop/nopSlice';
+import gameSlice from '../features/game/gameSlice';
 
 export const store = configureStore({
   reducer: {
     nop: nopSlice,
+    game: gameSlice,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

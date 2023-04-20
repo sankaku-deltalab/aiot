@@ -15,7 +15,9 @@ config :aiot, AiotWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "Gn5U2URBM/A8eTT284zfnixq8bVUCoxsQ83VbJWHNKd/jfmYqsU7lpVFqzgmmlcl",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    esbuild:
+      {Esbuild, :install_and_run,
+       [:default, ~w(--sourcemap=inline --define:global=window --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 

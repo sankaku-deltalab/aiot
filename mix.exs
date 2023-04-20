@@ -60,8 +60,12 @@ defmodule Aiot.MixProject do
     [
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.build": ["tailwind default", "esbuild default --define:global=window"],
+      "assets.deploy": [
+        "tailwind default --minify",
+        "esbuild default --minify --define:global=window",
+        "phx.digest"
+      ]
     ]
   end
 end

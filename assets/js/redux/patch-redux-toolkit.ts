@@ -10,10 +10,17 @@ import {AnyAction, PayloadAction, Slice} from '@reduxjs/toolkit';
  */
 
 /** Add reducers without immer.js to a redux-toolkit slice */
-export function addRawReducers<S>(
+export type RawReducersTypeDefinition = Record<string, unknown>;
+export type RawReducerFunctions<S, Def extends RawReducersTypeDefinition> = {
+  [K in keyof Def]: (state: S, action: PayloadAction<Def[K]>) => S;
+};
+export type ReducerFunctions<S, Def extends RawReducersTypeDefinition> = {
+  [K in keyof Def]: (payload: Def[K]) => {type: K; payload: Def[K]};
+};
+export function addRawReducers<S, Def extends RawReducersTypeDefinition>(
   slice: Slice<S>,
-  reducers: Record<string, (state: S, action: PayloadAction<any>) => S>
-) {
+  reducers: RawReducerFunctions<S, Def>
+): ReducerFunctions<S, Def> {
   const originalReducer = slice.reducer;
   const actionMap = Object.fromEntries(Object.entries(reducers).map(([name, fn]) => [`${slice.name}/${name}`, fn]));
 
@@ -27,5 +34,5 @@ export function addRawReducers<S>(
     Object.entries(reducers).map(([name]) => [name, (payload: any) => ({type: `${slice.name}/${name}`, payload})])
   );
 
-  return actionCreators;
+  return actionCreators as ReducerFunctions<S, Def>;
 }

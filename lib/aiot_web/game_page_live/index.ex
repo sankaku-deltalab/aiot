@@ -76,7 +76,7 @@ defmodule AiotWeb.GamePageLive.Index do
 
     # Add game result data to assigns
 
-    {:noreply, socket}
+    {:reply, %{:c => "d", "e" => %{f: 1, g: "h"}}, socket}
   end
 
   @impl true

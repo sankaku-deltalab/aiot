@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 import {DefineHookType, TypedViewHookModifier, TypedViewHook} from 'typed-phoenix-live-view-hook';
 import {store} from '../redux/app/store';
 import App from '../redux/App';
+import {abortGame, startGame} from 'js/redux/features/game/thunk-actions';
 
 export type ClientSiderDef = DefineHookType<{
   el: HTMLElement;
@@ -26,11 +27,11 @@ export class ClientSider implements TypedViewHookModifier<Def> {
   }
 
   private setupServerToClientHandling(hook: TypedViewHook<Def>): void {
-    hook.handleEvent('startGame', payload => {
-      console.log('Server request startGame', payload);
+    hook.handleEvent('startGame', ({}) => {
+      store.dispatch(startGame({}));
     });
     hook.handleEvent('abortGame', payload => {
-      console.log('Server request abortGame', payload);
+      store.dispatch(abortGame({}));
     });
   }
 
