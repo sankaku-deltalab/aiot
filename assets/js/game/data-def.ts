@@ -1,8 +1,9 @@
 import {DefineDataDefinition} from 'curtain-call3';
 import {Player} from './bodies/player';
+import {AiotLevel} from './level';
 
 export type DataDef = DefineDataDefinition<{
-  level: {};
+  level: AiotLevel;
   bodies: {
     // player: Player;
   };
@@ -10,5 +11,7 @@ export type DataDef = DefineDataDefinition<{
   dynamicSources: {};
   customInputs: {};
   notifications: {};
-  representation: {};
+  representation: {
+    status: {type: 'playing'} | {type: 'ended'; finalScore: number};
+  };
 }>;

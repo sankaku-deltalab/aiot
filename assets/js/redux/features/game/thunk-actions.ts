@@ -18,7 +18,7 @@ export const startGame =
       cameraSize: {x: 2, y: 2},
       dataSources: {},
       initialCustomInputs: {},
-      level: {},
+      level: {elapsedTimeMs: 0},
     });
     dispatch(gameStarted({newState: state}));
   };
@@ -46,7 +46,8 @@ export const updateGame =
       realWorldTimeDeltaMs: deltaMs,
       renderingState,
     });
-    const ended = false;
+
+    const ended = representation.status.type === 'ended';
     dispatch(gameUpdated({newState, ended}));
 
     if (ended) {

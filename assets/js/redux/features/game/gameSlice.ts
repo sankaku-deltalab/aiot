@@ -26,7 +26,7 @@ const createInitialSerializableState = () => {
     cameraSize: {x: 2, y: 2},
     dataSources: {},
     initialCustomInputs: {},
-    level: {},
+    level: {elapsedTimeMs: 0},
   });
 };
 
