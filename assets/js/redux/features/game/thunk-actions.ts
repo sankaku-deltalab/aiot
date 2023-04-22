@@ -40,7 +40,7 @@ export const updateGame =
 
     const {deltaMs} = args;
     const {canvasPointer, customInput, renderingState} = sliceState;
-    const {state: newState, notifications} = GameProcessingHelper.updateState(sliceState.state, processors, {
+    const {state: newState, representation} = GameProcessingHelper.updateState(sliceState.state, processors, {
       canvasPointer,
       customInput,
       realWorldTimeDeltaMs: deltaMs,

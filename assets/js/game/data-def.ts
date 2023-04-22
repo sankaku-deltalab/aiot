@@ -10,4 +10,5 @@ export type DataDef = DefineDataDefinition<{
   dynamicSources: {};
   customInputs: {};
   notifications: {};
+  representation: {};
 }>;

@@ -1,4 +1,4 @@
-import {Director, GameState, TimeScaling, AnyTypeNotification} from 'curtain-call3';
+import {Director, GameState, TimeScaling, AnyTypeNotification, Representation} from 'curtain-call3';
 import {DataDef} from './data-def';
 
 type Def = DataDef;
@@ -16,7 +16,7 @@ export class AiotDirector implements Director<Def> {
     return {base: 1};
   }
 
-  generateNotification(_state: GameState<Def>): AnyTypeNotification<Def>[] {
-    return [];
+  represent(_state: GameState<Def>): Representation<Def> {
+    return {};
   }
 }
