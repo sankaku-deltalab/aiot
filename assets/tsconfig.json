@@ -16,7 +16,8 @@
     "baseUrl": "./",
     "typeRoots": ["types", "node_modules/@types"],
     "jsx": "react",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "exclude": ["node_modules"]
 }
