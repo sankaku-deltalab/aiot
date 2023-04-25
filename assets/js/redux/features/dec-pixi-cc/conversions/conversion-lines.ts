@@ -3,7 +3,7 @@ import {Graphics} from 'pixi.js';
 import {DecPixiCfg} from '../cfg';
 
 type Cfg = DecPixiCfg;
-type CType = 'lines';
+type CType = 'canvas-line';
 
 export class ConversionLines implements Conversion<Cfg, CType> {
   createPixiObject(

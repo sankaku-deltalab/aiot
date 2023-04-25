@@ -3,7 +3,7 @@ import {Sprite, Texture} from 'pixi.js';
 import {DecPixiCfg} from '../cfg';
 
 type Cfg = DecPixiCfg;
-type CType = 'sprite';
+type CType = 'canvas-sprite';
 
 export class ConversionSprite implements Conversion<Cfg, CType> {
   createPixiObject(

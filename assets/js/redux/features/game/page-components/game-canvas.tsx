@@ -46,12 +46,13 @@ export const GameCanvas: React.FC<Props> = props => {
     const dec = new DeclarativePixi<DecPixiCfg>({
       root: app.stage,
       conversions: {
-        lines: new ConversionLines(),
-        sprite: new ConversionSprite(),
+        'canvas-line': new ConversionLines(),
+        'canvas-sprite': new ConversionSprite(),
       },
     });
 
     setAppDecPixi([app, dec]);
+    dispatch(canvasSizeUpdated({canvasSize: {x: canvas.width, y: canvas.height}}));
 
     return () => {
       console.log('pixi destroy');

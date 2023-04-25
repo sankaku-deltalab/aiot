@@ -1,5 +1,16 @@
-import {Director, GameState, TimeScaling, Representation, DirectorUpdateArgs, LevelHelper, Im} from 'curtain-call3';
+import {
+  Director,
+  GameState,
+  TimeScaling,
+  Representation,
+  DirectorUpdateArgs,
+  LevelHelper,
+  Im,
+  BodiesHelper,
+  TVec2d,
+} from 'curtain-call3';
 import {DataDef} from './data-def';
+import {TPlayer} from './bodies/player';
 
 type Def = DataDef;
 
@@ -9,6 +20,26 @@ export class AiotDirector implements Director<Def> {
   }
 
   update(state: GameState<Def>, args: DirectorUpdateArgs): GameState<Def> {
+    return Im.pipe(
+      () => state,
+      state => this.maybeInit(state, args),
+      state => this.updateElapsedTime(state, args)
+    )();
+  }
+
+  private maybeInit(state: GameState<Def>, args: DirectorUpdateArgs): GameState<Def> {
+    const isFirstUpdate = LevelHelper.getLevel(state).elapsedTimeMs === 0;
+    if (!isFirstUpdate) return state;
+
+    const player = TPlayer.newAttrs({pos: TVec2d.zero()});
+
+    return Im.pipe(
+      () => state,
+      state => BodiesHelper.addBodyFromAttrsB(state, player).state
+    )();
+  }
+
+  private updateElapsedTime(state: GameState<Def>, args: DirectorUpdateArgs): GameState<Def> {
     return Im.pipe(
       () => state,
       state => LevelHelper.updateLevel(state, lv => Im.update(lv, 'elapsedTimeMs', t => t + args.deltaMs))

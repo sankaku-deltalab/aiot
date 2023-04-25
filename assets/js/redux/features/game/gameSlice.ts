@@ -1,16 +1,22 @@
-import {PayloadAction, createSlice} from '@reduxjs/toolkit';
+import {PayloadAction, createSelector, createSlice} from '@reduxjs/toolkit';
 import {
   SerializableState,
-  GameProcessingHelper,
   RawCanvasPointerState,
   CanvasRenderingState,
   CustomInputs,
   Vec2d,
   TVec2d,
   Im,
+  CanvasGraphic,
+  GameProcessingHelper,
 } from 'curtain-call3';
 import {addRawReducers} from 'js/redux/patch-redux-toolkit';
 import {DataDef} from 'js/game/data-def';
+import {calcRenderingState, createInitialSerializableState} from 'js/game/init';
+import {RootState} from 'js/redux/app/store';
+import {processors} from 'js/game/processors';
+import {AnyDeclarationObject} from 'declarative-pixi';
+import {DecPixiCfg} from '../dec-pixi-cc/cfg';
 
 export type GameSliceState = {
   playing: boolean;
@@ -21,15 +27,6 @@ export type GameSliceState = {
   customInput: CustomInputs<DataDef>;
 };
 
-const createInitialSerializableState = () => {
-  return GameProcessingHelper.createSerializableState<DataDef>({
-    cameraSize: {x: 2, y: 2},
-    dataSources: {},
-    initialCustomInputs: {},
-    level: {elapsedTimeMs: 0},
-  });
-};
-
 const initialState: GameSliceState = {
   // play
   playing: false,
@@ -37,7 +34,7 @@ const initialState: GameSliceState = {
   // cc3
   state: createInitialSerializableState(),
   canvasPointer: {canvasPos: {x: 0, y: 0}, down: false},
-  renderingState: {canvasSize: {x: 0, y: 0}, center: {x: 0, y: 0}, scale: 1},
+  renderingState: calcRenderingState({x: 2, y: 2}),
   customInput: {},
 };
 
@@ -73,11 +70,7 @@ const rawReducers = addRawReducers(gameSlice, {
   canvasSizeUpdated: (sliceState, {payload}: PayloadAction<{canvasSize: Vec2d}>) => {
     const {canvasSize} = payload;
 
-    return Im.update(sliceState, 'renderingState', () => ({
-      canvasSize,
-      center: TVec2d.div(canvasSize, 2),
-      scale: 1,
-    }));
+    return Im.update(sliceState, 'renderingState', () => calcRenderingState(canvasSize));
   },
   pointerDownedOrUpped: (sliceState, {payload}: PayloadAction<{down: boolean; canvasPos: Vec2d}>) => {
     const {down, canvasPos} = payload;
@@ -100,5 +93,35 @@ const rawReducers = addRawReducers(gameSlice, {
 // export const {} = gameSlice.actions;
 export const {gameStarted, gameAborted, gameUpdated, canvasSizeUpdated, pointerDownedOrUpped, pointerMovedTo} =
   rawReducers;
+
+const selectGameSlice = (state: RootState) => state.game;
+
+export const selectCanvasSize = createSelector<[typeof selectGameSlice], Vec2d>([selectGameSlice], state => {
+  return state.renderingState.canvasSize;
+});
+
+const selectGraphics = createSelector<[typeof selectGameSlice], CanvasGraphic<DataDef>[]>(
+  [selectGameSlice],
+  sliceState => {
+    const {canvasPointer, customInput, renderingState} = sliceState;
+    return GameProcessingHelper.generateGraphics(sliceState.state, processors, {
+      canvasPointer,
+      customInput,
+      realWorldTimeDeltaMs: 0,
+      renderingState,
+    });
+  }
+);
+
+export const selectGraphicDeclarations = createSelector<[typeof selectGraphics], AnyDeclarationObject<DecPixiCfg>[]>(
+  [selectGraphics],
+  graphics => {
+    return graphics.map(g => ({
+      id: g.key,
+      type: g.type,
+      declaration: g,
+    }));
+  }
+);
 
 export default gameSlice.reducer;

@@ -5,11 +5,11 @@ import {Graphics, Sprite} from 'pixi.js';
 export type DecPixiCfg = DefineConfig<{
   context: {};
   objects: {
-    lines: {
+    'canvas-line': {
       declaration: CanvasLineGraphic;
       pixiObj: Graphics;
     };
-    sprite: {
+    'canvas-sprite': {
       declaration: CanvasSpriteGraphic;
       pixiObj: Sprite;
     };
