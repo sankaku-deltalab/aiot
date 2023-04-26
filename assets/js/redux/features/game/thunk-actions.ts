@@ -5,6 +5,7 @@ import {ClientSiderDef} from 'js/hooks/client-sider';
 import {gameAborted, gameStarted, gameUpdated} from './gameSlice';
 import {DataDef} from 'js/game/data-def';
 import {processors} from 'js/game/processors';
+import {createInitialSerializableState} from 'js/game/init';
 
 const clientSiderId = 'cs';
 
@@ -14,12 +15,7 @@ export const startGame =
     console.log('Server request startGame', args);
 
     const _sliceState = getState().game;
-    const state = GameProcessingHelper.createSerializableState<DataDef>({
-      cameraSize: {x: 2, y: 2},
-      dataSources: {},
-      initialCustomInputs: {},
-      level: {elapsedTimeMs: 0},
-    });
+    const state = createInitialSerializableState();
     dispatch(gameStarted({newState: state}));
   };
 

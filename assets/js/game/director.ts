@@ -52,7 +52,7 @@ export class AiotDirector implements Director<Def> {
 
   represent(state: GameState<Def>): Representation<Def> {
     const lv = LevelHelper.getLevel(state);
-    const ended = lv.elapsedTimeMs >= 1000;
+    const ended = lv.elapsedTimeMs >= 3000;
     return {
       status: ended ? {type: 'ended', finalScore: 0} : {type: 'playing'},
     };

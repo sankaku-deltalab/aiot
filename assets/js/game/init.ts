@@ -15,7 +15,7 @@ export const calcRenderingState = (canvasSize: Vec2d): CanvasRenderingState => {
   const scale = Im.pipe(
     () => TVec2d.broadcast({cam: gameAreaSize, can: canvasSize}, ({cam, can}) => can / cam),
     ({x, y}) => Math.min(x, y),
-    scale => scale * 0.9
+    scale => scale * 0.75
   )();
 
   const centerX = canvasSize.x / 2;
