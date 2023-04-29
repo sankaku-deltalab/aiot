@@ -2,6 +2,7 @@ import {
   Body,
   Collision,
   CollisionHelper,
+  DynamicSourceHelper,
   GameState,
   Graphic,
   Im,
@@ -15,11 +16,14 @@ import {
 } from 'curtain-call3';
 import {DataDef} from '../data-def';
 import {gameAreaRect, unit} from '../constants';
+import {TPlayer} from '../bodies/player';
+import {PlayerGunTrain} from '../bodies/player-components/player-gun';
 
 type Def = DataDef;
 type BT = 'player';
 type Props = {
   pointerDelta: Vec2d;
+  gun: PlayerGunTrain;
 };
 
 const playerSize = {x: unit / 2, y: unit / 2};
@@ -27,28 +31,20 @@ const playerSize = {x: unit / 2, y: unit / 2};
 export class PlayerMind implements Mind<Def, BT, Props> {
   calcProps(state: GameState<Def>, _body: Body<Def, BT>): Props {
     const pointerDelta = InputHelper.pointerDeltaWhileDown(state);
-    return {pointerDelta};
+    const {gun} = DynamicSourceHelper.fetchB(state, 'playerGuns', 'default', {});
+    return {pointerDelta, gun};
   }
 
   updateBody(body: Body<Def, BT>, args: MindArgs, props: Props): Body<Def, BT> {
-    return Im.pipe(
-      () => body,
-      body => this.updatePos(body, args, props)
-    )();
-  }
+    const {deltaMs} = args;
+    const {pointerDelta, gun} = props;
 
-  private updatePos(body: Body<Def, BT>, _args: MindArgs, props: Props): Body<Def, BT> {
-    const movableArea = TAaRect2d.reduceArea(gameAreaRect, playerSize);
     return Im.pipe(
       () => body,
-      body =>
-        Im.update(body, 'pos', p =>
-          Im.pipe(
-            () => p,
-            p => TVec2d.add(p, props.pointerDelta),
-            p => TAaRect2d.clampPosition(p, movableArea)
-          )()
-        )
+      body => TPlayer.updateElapsedTime(body, deltaMs),
+      body => TPlayer.updatePos(body, pointerDelta, deltaMs),
+      body => TPlayer.maybeUpdateFireMode(body, deltaMs),
+      body => TPlayer.updateFiring(body, gun, deltaMs)
     )();
   }
 
@@ -79,10 +75,19 @@ export class PlayerMind implements Mind<Def, BT, Props> {
     const corners = TAaRect2d.corners(rect);
     const paths = [corners.nw, corners.ne, corners.se, corners.sw];
 
+    const color =
+      body.fireMode === 'initial'
+        ? 0xaaaaaa
+        : body.fireMode === 'shot'
+        ? 0x4444aa
+        : body.fireMode === 'bomb'
+        ? 0xaa4444
+        : 0x444444;
+
     return TLineGraphic.create({
       key: 'main',
       pos: body.pos,
-      color: 0x4444aa,
+      color: color,
       thickness: 10,
       zIndex: 0,
       paths,
