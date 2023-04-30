@@ -8,6 +8,7 @@ import {
   Im,
   BodiesHelper,
   TVec2d,
+  DataSourceHelper,
 } from 'curtain-call3';
 import {DataDef} from './data-def';
 import {TPlayer} from './bodies/player';
@@ -54,12 +55,12 @@ export class AiotDirector implements Director<Def> {
     if (!shouldSpawn) return state;
 
     const spawnPos = {x: (Math.random() - 0.5) * gameAreaSize.x, y: Math.random() * -0.5 * gameAreaSize.y};
-    // TODO: use stat
+    const stats = DataSourceHelper.fetchB(state, 'enemyStats', 'alpha');
     const enemy = TEnemy.newAttrs({
       pos: spawnPos,
-      statId: '',
-      health: 100,
-      gunId: 'alpha',
+      statId: stats.id,
+      health: stats.health,
+      gunId: stats.gunId,
       startFireDelayMs: 500,
     });
 

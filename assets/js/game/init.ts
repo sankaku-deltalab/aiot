@@ -2,12 +2,14 @@ import {GameProcessingHelper, Vec2d, CanvasRenderingState, TVec2d, Im} from 'cur
 import {DataDef} from './data-def';
 import {gameAreaSize} from './constants';
 import {defaultBaseParams} from './data-sources/base-params';
+import {defaultEnemyStats} from './data-sources/enemy-stats';
 
 export const createInitialSerializableState = () => {
   return GameProcessingHelper.createSerializableState<DataDef>({
     cameraSize: gameAreaSize,
     dataSources: {
       baseParams: defaultBaseParams,
+      enemyStats: defaultEnemyStats,
     },
     initialCustomInputs: {},
     level: {elapsedTimeMs: 0},
