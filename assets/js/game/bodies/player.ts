@@ -70,7 +70,7 @@ export class TPlayer {
 
   private static calcNewTrail(body: Player, newPos: Vec2d, deltaMs: number): [BodyTimeMs, Vec2d][] {
     const time = body.elapsedMs;
-    const trailLifeTimeMs = 1000;
+    const trailLifeTimeMs = 250;
     const trailAliveTimeMin = time - trailLifeTimeMs;
     const newPoint: [BodyTimeMs, Vec2d] = [time, newPos];
 
@@ -111,7 +111,9 @@ export class TPlayer {
     return body;
   }
 
-  static updateFiring(body: Player, gun: PlayerGunTrain, deltaMs: number): Player {
+  static maybeUpdateFiring(body: Player, gun: PlayerGunTrain, deltaMs: number): Player {
+    if (!this.shouldFire(body)) return body;
+
     const baseAngleRad = -Math.PI / 2;
     const basePos = body.pos;
     const r = TGunTrainState.update(body.shotFiring.state, gun, {baseAngleRad, basePos}, {deltaMs, loop: true});
@@ -123,5 +125,9 @@ export class TPlayer {
         requestingFires: r.fires,
       },
     };
+  }
+
+  private static shouldFire(body: Player): boolean {
+    return body.fireMode === 'shot';
   }
 }

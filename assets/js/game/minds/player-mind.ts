@@ -44,7 +44,7 @@ export class PlayerMind implements Mind<Def, BT, Props> {
       body => TPlayer.updateElapsedTime(body, deltaMs),
       body => TPlayer.updatePos(body, pointerDelta, deltaMs),
       body => TPlayer.maybeUpdateFireMode(body, deltaMs),
-      body => TPlayer.updateFiring(body, gun, deltaMs)
+      body => TPlayer.maybeUpdateFiring(body, gun, deltaMs)
     )();
   }
 

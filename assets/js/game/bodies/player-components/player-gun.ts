@@ -22,7 +22,7 @@ const rawGun = GF.terminal<GT>({
   calcValues({baseAngleRad, basePos}, _args) {
     const angleRad = baseAngleRad;
     const positions = [TVec2d.add(basePos, {x: unit / 4, y: 0}), TVec2d.add(basePos, {x: -unit / 4, y: 0})];
-    const speed = 2 * unitPerSec;
+    const speed = 6 * unitPerSec;
 
     return positions.map(p => ({
       values: {

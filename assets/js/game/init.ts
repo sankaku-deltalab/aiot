@@ -1,11 +1,14 @@
 import {GameProcessingHelper, Vec2d, CanvasRenderingState, TVec2d, Im} from 'curtain-call3';
 import {DataDef} from './data-def';
 import {gameAreaSize} from './constants';
+import {defaultBaseParams} from './data-sources/base-params';
 
 export const createInitialSerializableState = () => {
   return GameProcessingHelper.createSerializableState<DataDef>({
     cameraSize: gameAreaSize,
-    dataSources: {},
+    dataSources: {
+      baseParams: defaultBaseParams,
+    },
     initialCustomInputs: {},
     level: {elapsedTimeMs: 0},
   });

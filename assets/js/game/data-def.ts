@@ -5,6 +5,7 @@ import {Enemy} from './bodies/enemy';
 import {Bullet} from './bodies/bullet';
 import {Effect} from './bodies/effect';
 import {PlayerGunItem, PlayerGunProps} from './dynamic-sources/player-guns';
+import {BaseParams} from './data-sources/base-params';
 
 export type DataDef = DefineDataDefinition<{
   level: AiotLevel;
@@ -14,7 +15,9 @@ export type DataDef = DefineDataDefinition<{
     bullet: Bullet;
     effect: Effect;
   };
-  dataSources: {};
+  dataSources: {
+    baseParams: BaseParams;
+  };
   dynamicSources: {
     playerGuns: {
       props: PlayerGunProps;
