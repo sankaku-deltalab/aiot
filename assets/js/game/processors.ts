@@ -7,12 +7,14 @@ import {BulletMind} from './minds/bullet-mind';
 import {EffectMind} from './minds/effect-mind';
 import {playerGunDynamicSource} from './dynamic-sources/player-guns';
 import {PlayerFireBullet} from './procedures/player-fire-bullet';
+import {enemyGunDynamicSource} from './dynamic-sources/enemy-guns';
 
 export const processors: AllProcessorsState<DataDef> = {
   director: {director: new AiotDirector()},
   dynamicSources: {
     dynamicSources: {
       playerGuns: playerGunDynamicSource,
+      enemyGuns: enemyGunDynamicSource,
     },
   },
   minds: {

@@ -13,7 +13,7 @@ export type Player = {
   // basic
   elapsedMs: BodyTimeMs;
   pos: Vec2d;
-  //   pos memory while 1 sec [timestamp_ms, pos]
+  //   pos memory [timestamp_ms, pos][]
   moveTrail: [BodyTimeMs, Vec2d][];
   // fire mode
   fireMode: 'initial' | 'shot' | 'bomb' | 'afterBomb';
@@ -117,7 +117,6 @@ export class TPlayer {
     const baseAngleRad = -Math.PI / 2;
     const basePos = body.pos;
     const r = TGunTrainState.update(body.shotFiring.state, gun, {baseAngleRad, basePos}, {deltaMs, loop: true});
-    const newBody = Im.updateIn2(body, ['shotFiring', 'state'], () => r.state);
     return {
       ...body,
       shotFiring: {

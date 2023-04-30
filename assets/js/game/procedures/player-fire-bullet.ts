@@ -16,8 +16,6 @@ export class PlayerFireBullet extends BodiesReducerProcedure<Def, 'player'> {
     const fires = player.shotFiring.requestingFires;
     const newPlayer = Im.updateIn2(player, ['shotFiring', 'requestingFires'], () => []);
 
-    console.log({fires});
-
     const baseParams = DataSourceHelper.fetchB(state, 'baseParams', 'default');
     const collisionSize = baseParams['player_bullet.collision_size'];
     const renderingSize = baseParams['player_bullet.rendering_size'];

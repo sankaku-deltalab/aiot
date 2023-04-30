@@ -11,6 +11,8 @@ import {
 } from 'curtain-call3';
 import {DataDef} from './data-def';
 import {TPlayer} from './bodies/player';
+import {gameAreaSize} from './constants';
+import {TEnemy} from './bodies/enemy';
 
 type Def = DataDef;
 
@@ -23,7 +25,8 @@ export class AiotDirector implements Director<Def> {
     return Im.pipe(
       () => state,
       state => this.maybeInit(state, args),
-      state => this.updateElapsedTime(state, args)
+      state => this.updateElapsedTime(state, args),
+      state => this.maybeSpawnEnemy(state, args)
     )();
   }
 
@@ -43,6 +46,26 @@ export class AiotDirector implements Director<Def> {
     return Im.pipe(
       () => state,
       state => LevelHelper.updateLevel(state, lv => Im.update(lv, 'elapsedTimeMs', t => t + args.deltaMs))
+    )();
+  }
+
+  private maybeSpawnEnemy(state: GameState<Def>, args: DirectorUpdateArgs): GameState<Def> {
+    const shouldSpawn = Math.random() * 60 < 1;
+    if (!shouldSpawn) return state;
+
+    const spawnPos = {x: (Math.random() - 0.5) * gameAreaSize.x, y: Math.random() * -0.5 * gameAreaSize.y};
+    // TODO: use stat
+    const enemy = TEnemy.newAttrs({
+      pos: spawnPos,
+      statId: '',
+      health: 100,
+      gunId: 'alpha',
+      startFireDelayMs: 500,
+    });
+
+    return Im.pipe(
+      () => state,
+      state => BodiesHelper.addBodyFromAttrsB(state, enemy).state
     )();
   }
 
