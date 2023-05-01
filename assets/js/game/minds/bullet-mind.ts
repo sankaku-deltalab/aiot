@@ -35,7 +35,10 @@ export class BulletMind implements Mind<Def, BT, Props> {
     const bulletSize = TVec2d.mlt({x: 1, y: 1}, body.renderingSize * 2);
     const bulletRect = TAaRect2d.fromCenterAndSize(body.pos, bulletSize);
     const lifeArea = TAaRect2d.reduceArea(gameAreaRect, bulletSize);
-    return TAaRect2d.isOutOf(bulletRect, lifeArea);
+    const isNotInLifeArea = TAaRect2d.isOutOf(bulletRect, lifeArea);
+
+    const isHit = body.isHit;
+    return isNotInLifeArea || isHit;
   }
 
   generateGraphics(body: Body<Def, BT>, props: Props): Graphic<Def>[] {

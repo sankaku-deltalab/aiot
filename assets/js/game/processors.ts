@@ -8,6 +8,7 @@ import {EffectMind} from './minds/effect-mind';
 import {playerGunDynamicSource} from './dynamic-sources/player-guns';
 import {PlayerFireBullet} from './procedures/player-fire-bullet';
 import {enemyGunDynamicSource} from './dynamic-sources/enemy-guns';
+import {BulletHitToEnemy} from './procedures/bullet-hit-to-enemy';
 
 export const processors: AllProcessorsState<DataDef> = {
   director: {director: new AiotDirector()},
@@ -25,5 +26,5 @@ export const processors: AllProcessorsState<DataDef> = {
       effect: new EffectMind(),
     },
   },
-  procedures: {earlyProcedure: [], laterProcedure: [new PlayerFireBullet()]},
+  procedures: {earlyProcedure: [], laterProcedure: [new PlayerFireBullet(), new BulletHitToEnemy()]},
 };

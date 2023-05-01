@@ -13,6 +13,7 @@ export type Bullet = {
   // damaging
   isPlayerSide: boolean;
   damage: number;
+  isHit: boolean;
 };
 
 type BulletAttrs = Omit<Bullet, 'id'>;
@@ -37,6 +38,7 @@ export class TBullet {
       renderingSize: opt.renderingSize,
       isPlayerSide: opt.isPlayerSide,
       damage: opt.damage,
+      isHit: false,
     };
   }
 
