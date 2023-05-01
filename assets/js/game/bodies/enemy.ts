@@ -94,6 +94,6 @@ export class TEnemy {
     if (target.err) return Math.PI / 2;
 
     const dirVec = TVec2d.sub(target.val.pos, body.pos);
-    return Math.atan2(dirVec.x, dirVec.y);
+    return Math.atan2(dirVec.y, dirVec.x);
   }
 }

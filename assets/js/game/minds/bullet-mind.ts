@@ -67,6 +67,6 @@ export class BulletMind implements Mind<Def, BT, Props> {
     const collisionSize = TVec2d.mlt({x: 1, y: 1}, body.collisionSize);
     const rect = TAaRect2d.fromCenterAndSize(body.pos, collisionSize);
     const mainShape = CollisionHelper.createAaRectShape(rect);
-    return CollisionHelper.createCollision({shapes: [mainShape]});
+    return CollisionHelper.createCollision({shapes: [mainShape], excess: true});
   }
 }

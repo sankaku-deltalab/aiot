@@ -10,6 +10,7 @@ import {PlayerFireBullet} from './procedures/player-fire-bullet';
 import {enemyGunDynamicSource} from './dynamic-sources/enemy-guns';
 import {BulletHitToEnemy} from './procedures/bullet-hit-to-enemy';
 import {KillEnemyIfShouldDie} from './procedures/kill-enemy-if-should-die';
+import {EnemyFireBullet} from './procedures/enemy-fire-bullet';
 
 export const processors: AllProcessorsState<DataDef> = {
   director: {director: new AiotDirector()},
@@ -29,6 +30,6 @@ export const processors: AllProcessorsState<DataDef> = {
   },
   procedures: {
     earlyProcedure: [],
-    laterProcedure: [new PlayerFireBullet(), new BulletHitToEnemy(), new KillEnemyIfShouldDie()],
+    laterProcedure: [new PlayerFireBullet(), new BulletHitToEnemy(), new KillEnemyIfShouldDie(), new EnemyFireBullet()],
   },
 };
