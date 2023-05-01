@@ -17,6 +17,7 @@ export type Enemy = {
   // hit
   health: number;
   isDead: boolean;
+  collisionSize: Vec2d;
   // fire
   gunId: string;
   startFireDelayMs: number;
@@ -36,6 +37,7 @@ type EnemyInitValues = {
   statId: string;
   // hit
   health: number;
+  collisionSize: Vec2d;
   // fire
   gunId: string;
   startFireDelayMs: number;
@@ -50,6 +52,7 @@ export class TEnemy {
       pos: opt.pos,
       health: opt.health,
       isDead: false,
+      collisionSize: opt.collisionSize,
       gunId: opt.gunId,
       startFireDelayMs: opt.startFireDelayMs,
       shotFiring: {

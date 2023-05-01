@@ -77,7 +77,9 @@ export class EnemyMind implements Mind<Def, BT, Props> {
     });
   }
 
-  generateCollision(_body: Body<Def, BT>, _props: Props): Collision {
-    return CollisionHelper.createCollision({shapes: []});
+  generateCollision(body: Body<Def, BT>, _props: Props): Collision {
+    const rect = TAaRect2d.fromCenterAndSize(body.pos, body.collisionSize);
+    const mainShape = CollisionHelper.createAaRectShape(rect);
+    return CollisionHelper.createCollision({shapes: [mainShape]});
   }
 }

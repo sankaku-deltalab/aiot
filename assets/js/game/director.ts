@@ -12,7 +12,7 @@ import {
 } from 'curtain-call3';
 import {DataDef} from './data-def';
 import {TPlayer} from './bodies/player';
-import {gameAreaSize} from './constants';
+import {gameAreaSize, unit} from './constants';
 import {TEnemy} from './bodies/enemy';
 
 type Def = DataDef;
@@ -56,10 +56,12 @@ export class AiotDirector implements Director<Def> {
 
     const spawnPos = {x: (Math.random() - 0.5) * gameAreaSize.x, y: Math.random() * -0.5 * gameAreaSize.y};
     const stats = DataSourceHelper.fetchB(state, 'enemyStats', 'alpha');
+    const collisionSize = TVec2d.mlt({x: stats.collision_size_unit_x, y: stats.collision_size_unit_y}, unit);
     const enemy = TEnemy.newAttrs({
       pos: spawnPos,
       statId: stats.id,
       health: stats.health,
+      collisionSize,
       gunId: stats.gunId,
       startFireDelayMs: 500,
     });
