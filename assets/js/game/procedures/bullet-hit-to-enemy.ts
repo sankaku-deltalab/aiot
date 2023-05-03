@@ -8,7 +8,6 @@ export class BulletHitToEnemy extends OverlapsReducerProcedure<Def, 'bullet', 'e
   rightBodyType: 'enemy' = 'enemy';
 
   applyOverlaps(state: GameState<Def>, bulletId: BodyId<Def, 'bullet'>, enemyId: BodyId<Def, 'enemy'>): GameState<Def> {
-    console.log('hit');
     const maybeBullet = BodiesHelper.fetchBody(state, bulletId);
     const maybeEnemy = BodiesHelper.fetchBody(state, enemyId);
 
@@ -21,7 +20,6 @@ export class BulletHitToEnemy extends OverlapsReducerProcedure<Def, 'bullet', 'e
 
     const newEnemy = Im.update(enemy, 'health', h => h - bullet.damage);
     const newBullet = Im.update(bullet, 'isHit', () => true);
-    console.log('hit2', newEnemy, newBullet);
     return BodiesHelper.putBodies(state, [newEnemy, newBullet]);
   }
 }

@@ -15,6 +15,9 @@ export type Player = {
   pos: Vec2d;
   //   pos memory [timestamp_ms, pos][]
   moveTrail: [BodyTimeMs, Vec2d][];
+  // damaging
+  isHit: boolean;
+  isDead: boolean;
   // fire mode
   fireMode: 'initial' | 'shot' | 'bomb' | 'afterBomb';
   shotFiring: {
@@ -32,6 +35,8 @@ export class TPlayer {
       elapsedMs: 0,
       pos: opt.pos,
       moveTrail: [[0, opt.pos]],
+      isHit: false,
+      isDead: false,
       fireMode: 'initial',
       shotFiring: {
         state: TGunTrainState.new(),
@@ -48,6 +53,9 @@ export class TPlayer {
    * Update position and trail.
    */
   static updatePos(body: Player, moveDelta: Vec2d, deltaMs: number): Player {
+    if (body.isHit) return body;
+    if (body.isDead) return body;
+
     const pos = this.calcNewPos(body, moveDelta, deltaMs);
     const trail = this.calcNewTrail(body, pos, deltaMs);
 
