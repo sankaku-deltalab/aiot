@@ -112,7 +112,7 @@ const createPixiApplication = (props: Props, canvas: HTMLCanvasElement, resizer:
   const app = new Application({
     view: canvas,
     antialias: true,
-    // backgroundColor: 0xff0000, // TODO:
+    backgroundColor: 0x111111, // TODO:
     resizeTo: resizer,
     // width: props.width,
     // height: props.height,
