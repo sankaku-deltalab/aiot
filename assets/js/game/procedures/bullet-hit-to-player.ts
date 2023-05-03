@@ -12,7 +12,6 @@ export class BulletHitToPlayer extends OverlapsReducerProcedure<Def, 'bullet', '
     bulletId: BodyId<Def, 'bullet'>,
     playerId: BodyId<Def, 'player'>
   ): GameState<Def> {
-    console.log('hit');
     const maybeBullet = BodiesHelper.fetchBody(state, bulletId);
     const maybePlayer = BodiesHelper.fetchBody(state, playerId);
 
@@ -24,8 +23,6 @@ export class BulletHitToPlayer extends OverlapsReducerProcedure<Def, 'bullet', '
     if (player.isHit) return state;
     if (player.isDead) return state;
 
-    console.log('hit2');
-
     const newPlayer = Im.update(player, 'isHit', () => true);
     const newBullet = Im.update(bullet, 'isHit', () => true);
     return Im.pipe(
@@ -34,7 +31,12 @@ export class BulletHitToPlayer extends OverlapsReducerProcedure<Def, 'bullet', '
       state =>
         HitStopHelper.addHitStop(state, {
           target: {type: 'whole-world'},
-          props: {type: 'constant', engineTimeDurationMs: 1000, gameTimeDurationMs: 0},
+          props: {type: 'constant', engineTimeDurationMs: 500, gameTimeDurationMs: 0},
+        }),
+      state =>
+        HitStopHelper.addHitStop(state, {
+          target: {type: 'whole-world'},
+          props: {type: 'constant', engineTimeDurationMs: 2500, gameTimeDurationMs: 200},
         })
     )();
   }
