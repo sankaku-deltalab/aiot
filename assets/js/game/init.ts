@@ -3,6 +3,7 @@ import {DataDef} from './data-def';
 import {gameAreaSize} from './constants';
 import {defaultBaseParams} from './data-sources/base-params';
 import {defaultEnemyStats} from './data-sources/enemy-stats';
+import {TAiotLevel} from './level';
 
 export const createInitialSerializableState = () => {
   return GameProcessingHelper.createSerializableState<DataDef>({
@@ -12,7 +13,7 @@ export const createInitialSerializableState = () => {
       enemyStats: defaultEnemyStats,
     },
     initialCustomInputs: {},
-    level: {elapsedTimeMs: 0},
+    level: TAiotLevel.new(),
   });
 };
 

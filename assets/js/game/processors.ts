@@ -12,6 +12,7 @@ import {BulletHitToEnemy} from './procedures/bullet-hit-to-enemy';
 import {KillEnemyIfShouldDie} from './procedures/kill-enemy-if-should-die';
 import {EnemyFireBullet} from './procedures/enemy-fire-bullet';
 import {BulletHitToPlayer} from './procedures/bullet-hit-to-player';
+import {KillPlayerIfShouldDie} from './procedures/kill-player-if-should-die';
 
 export const processors: AllProcessorsState<DataDef> = {
   director: {director: new AiotDirector()},
@@ -37,6 +38,7 @@ export const processors: AllProcessorsState<DataDef> = {
       new KillEnemyIfShouldDie(),
       new EnemyFireBullet(),
       new BulletHitToPlayer(),
+      new KillPlayerIfShouldDie(),
     ],
   },
 };

@@ -10,6 +10,7 @@
     "buffer": "^6.0.3",
     "curtain-call3": "github:sankaku-deltalab/curtain-call3",
     "declarative-pixi": "github:sankaku-deltalab/declarative-pixi",
+    "funcmata": "github:sankaku-deltalab/funcmata",
     "gun-train": "github:sankaku-deltalab/gun-train",
     "pixi.js": "^7.2.4",
     "react": "^18.2.0",

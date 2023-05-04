@@ -1,4 +1,4 @@
-import {Enum, Im, TAaRect2d, TVec2d, Vec2d} from 'curtain-call3';
+import {Enum, Im, ImList, TAaRect2d, TImList, TVec2d, Vec2d} from 'curtain-call3';
 import {GunTrainState, TGunTrainState} from 'gun-train';
 import {PlayerGunFire, PlayerGunTrain} from './player-components/player-gun';
 import {gameAreaRect, unit} from '../constants';
@@ -16,7 +16,7 @@ export type Player = {
   //   pos memory [timestamp_ms, pos][]
   moveTrail: [BodyTimeMs, Vec2d][];
   // damaging
-  isHit: boolean;
+  hitLog: ImList<{worldTimeMs: number}>;
   isDead: boolean;
   // fire mode
   fireMode: 'initial' | 'shot' | 'bomb' | 'afterBomb';
@@ -35,7 +35,7 @@ export class TPlayer {
       elapsedMs: 0,
       pos: opt.pos,
       moveTrail: [[0, opt.pos]],
-      isHit: false,
+      hitLog: TImList.new(),
       isDead: false,
       fireMode: 'initial',
       shotFiring: {
@@ -53,7 +53,7 @@ export class TPlayer {
    * Update position and trail.
    */
   static updatePos(body: Player, moveDelta: Vec2d, deltaMs: number): Player {
-    if (body.isHit) return body;
+    if (body.hitLog.size > 0) return body;
     if (body.isDead) return body;
 
     const pos = this.calcNewPos(body, moveDelta, deltaMs);

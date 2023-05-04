@@ -11,6 +11,7 @@ import {
   Mind,
   MindArgs,
   TAaRect2d,
+  TImList,
   TLineGraphic,
   TVec2d,
   Vec2d,
@@ -59,6 +60,7 @@ export class PlayerMind implements Mind<Def, BT, Props> {
 
     return [
       this.generateMainGraphic(body, props),
+      ...this.generateDeathGraphic(body, props),
       TLineGraphic.create({
         key: 'area',
         pos: TVec2d.zero(),
@@ -94,6 +96,46 @@ export class PlayerMind implements Mind<Def, BT, Props> {
       paths,
       closed: true,
     });
+  }
+
+  private generateDeathGraphic(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
+    if (body.hitLog.size <= 0) return [];
+
+    const currentTime = body.elapsedMs;
+    // TODO: should use body time not world time
+    const lastHitTime = TImList.pop(body.hitLog, {worldTimeMs: currentTime})[0].worldTimeMs;
+    if (currentTime <= lastHitTime) return [];
+    const explosionTimeMs = 300;
+    const finalTime = explosionTimeMs + lastHitTime;
+    const rate = Math.max(0, (finalTime - currentTime) / explosionTimeMs);
+
+    const explosionSizeMax = unit * 2;
+    const explosionSize = TVec2d.mlt(TVec2d.one(), rate ** (1 / 4) * explosionSizeMax);
+
+    const rect = TAaRect2d.fromCenterAndSize(TVec2d.zero(), explosionSize);
+    const corners = TAaRect2d.corners(rect);
+    const paths = [corners.nw, corners.ne, corners.se, corners.sw];
+
+    const color =
+      body.fireMode === 'initial'
+        ? 0xaaaaaa
+        : body.fireMode === 'shot'
+        ? 0x4444aa
+        : body.fireMode === 'bomb'
+        ? 0xaa4444
+        : 0x444444;
+
+    return [
+      TLineGraphic.create({
+        key: 'main',
+        pos: body.pos,
+        color: color,
+        thickness: 10,
+        zIndex: 0,
+        paths,
+        closed: true,
+      }),
+    ];
   }
 
   generateCollision(body: Body<Def, BT>, _props: Props): Collision {

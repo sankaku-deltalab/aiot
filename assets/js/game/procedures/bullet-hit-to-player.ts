@@ -1,4 +1,4 @@
-import {BodiesHelper, BodyId, GameState, HitStopHelper, Im, OverlapsReducerProcedure, TVec2d} from 'curtain-call3';
+import {BodiesHelper, BodyId, GameState, Im, OverlapsReducerProcedure, TImList} from 'curtain-call3';
 import {DataDef} from '../data-def';
 
 type Def = DataDef;
@@ -20,24 +20,15 @@ export class BulletHitToPlayer extends OverlapsReducerProcedure<Def, 'bullet', '
 
     if (bullet.isPlayerSide) return state;
     if (bullet.isHit) return state;
-    if (player.isHit) return state;
+
+    if (player.hitLog.size > 0) return state;
     if (player.isDead) return state;
 
-    const newPlayer = Im.update(player, 'isHit', () => true);
+    const newPlayer = Im.update(player, 'hitLog', log => TImList.push(log, {worldTimeMs: state.time.gameTimeMs}));
     const newBullet = Im.update(bullet, 'isHit', () => true);
     return Im.pipe(
       () => state,
-      state => BodiesHelper.putBodies(state, [newPlayer, newBullet]),
-      state =>
-        HitStopHelper.addHitStop(state, {
-          target: {type: 'whole-world'},
-          props: {type: 'constant', engineTimeDurationMs: 500, gameTimeDurationMs: 0},
-        }),
-      state =>
-        HitStopHelper.addHitStop(state, {
-          target: {type: 'whole-world'},
-          props: {type: 'constant', engineTimeDurationMs: 2500, gameTimeDurationMs: 200},
-        })
+      state => BodiesHelper.putBodies(state, [newPlayer, newBullet])
     )();
   }
 }
