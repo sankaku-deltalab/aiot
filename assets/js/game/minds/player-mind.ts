@@ -29,6 +29,7 @@ type Props = {
 };
 
 const playerSize = {x: unit / 2, y: unit / 2};
+const collisionSize = {x: unit / 8, y: unit / 8};
 
 export class PlayerMind implements Mind<Def, BT, Props> {
   calcProps(state: GameState<Def>, _body: Body<Def, BT>): Props {
@@ -139,7 +140,6 @@ export class PlayerMind implements Mind<Def, BT, Props> {
   }
 
   generateCollision(body: Body<Def, BT>, _props: Props): Collision {
-    const collisionSize = playerSize;
     const rect = TAaRect2d.fromCenterAndSize(body.pos, collisionSize);
     const mainShape = CollisionHelper.createAaRectShape(rect);
     return CollisionHelper.createCollision({shapes: [mainShape]});
