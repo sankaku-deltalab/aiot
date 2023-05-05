@@ -10,7 +10,7 @@ type PlayerFiringProgressDef = DefineFuncmataDefinition<{
   state: {moveTrail: [BodyTimeMs, Vec2d][]; shotFireState: GunTrainState} & (
     | {type: 'initial'}
     | {type: 'shot-firing'; requestingFires: PlayerGunFire[]}
-    | {type: 'bomb-charging'; chargeTimeMs: number}
+    | {type: 'bomb-charging'; chargeTimeMs: number; chargeTimeMsMax?: number}
     | {type: 'bomb-firing'}
     | {type: 'after-bomb'}
   );
@@ -39,6 +39,12 @@ class Handler implements EventHandler<Def> {
         return Im.pipe(
           () => state,
           state => this.maybeUpdateFiring(state, event)
+        )();
+      }
+      case 'charge-bomb': {
+        return Im.pipe(
+          () => state,
+          state => this.maybeChargeBomb(state, event)
         )();
       }
       // TODO: impl bomb
@@ -118,6 +124,19 @@ class Handler implements EventHandler<Def> {
       shotFireState: r.state,
     };
   }
+
+  private maybeChargeBomb(
+    state: PlayerFiringState,
+    event: PlayerFiringEvent & {type: 'charge-bomb'}
+  ): PlayerFiringState {
+    if (state.type !== 'bomb-charging') return state;
+
+    return {
+      ...state,
+      chargeTimeMs: state.chargeTimeMs + event.bodyDeltaMs,
+      chargeTimeMsMax: event.chargeTimeMsMax,
+    };
+  }
 }
 
 export type PlayerFiringState = FuncmataState<Def>;
@@ -142,5 +161,12 @@ export class PlayerFiringAutomaton {
       requestingFires: [],
     };
     return [newState, state.requestingFires];
+  }
+
+  static getBombChargeRate(state: PlayerFiringState): number {
+    if (state.type !== 'bomb-charging') return 0;
+    if (state.chargeTimeMsMax === undefined) return 0;
+
+    return state.chargeTimeMs / state.chargeTimeMsMax;
   }
 }

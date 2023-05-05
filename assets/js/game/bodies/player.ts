@@ -87,8 +87,23 @@ export class TPlayer {
     };
   }
 
+  static maybeChargeBomb(body: Player, deltaMs: number): Player {
+    return {
+      ...body,
+      firingState: PlayerFiringAutomaton.emitEvent(body.firingState, {
+        type: 'charge-bomb',
+        bodyDeltaMs: deltaMs,
+        chargeTimeMsMax: 1000,
+      }),
+    };
+  }
+
   static consumeFires(body: Player): [Player, PlayerGunFire[]] {
     const [newFiringState, fires] = PlayerFiringAutomaton.consumeFiring(body.firingState);
     return [{...body, firingState: newFiringState}, fires];
+  }
+
+  static getBombChargeRate(body: Player): number {
+    return PlayerFiringAutomaton.getBombChargeRate(body.firingState);
   }
 }
