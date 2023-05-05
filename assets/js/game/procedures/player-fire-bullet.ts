@@ -1,6 +1,7 @@
 import {BodiesHelper, BodiesReducerProcedure, Body, DataSourceHelper, Enum, GameState, Im, TVec2d} from 'curtain-call3';
 import {DataDef} from '../data-def';
 import {TBullet} from '../bodies/bullet';
+import {TPlayer} from '../bodies/player';
 
 type Def = DataDef;
 type BT = 'player';
@@ -13,8 +14,9 @@ export class PlayerFireBullet extends BodiesReducerProcedure<Def, 'player'> {
   }
 
   applyBody(state: GameState<Def>, player: Body<Def, BT>): GameState<Def> {
-    const fires = player.shotFiring.requestingFires;
-    const newPlayer = Im.updateIn2(player, ['shotFiring', 'requestingFires'], () => []);
+    if (player.firingState.type !== 'shot-firing') return state;
+
+    const [newPlayer, fires] = TPlayer.consumeFires(player);
 
     const baseParams = DataSourceHelper.fetchB(state, 'baseParams', 'default');
     const collisionSize = baseParams['player_bullet.collision_size'];

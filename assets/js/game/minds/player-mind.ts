@@ -46,7 +46,7 @@ export class PlayerMind implements Mind<Def, BT, Props> {
       () => body,
       body => TPlayer.updateElapsedTime(body, deltaMs),
       body => TPlayer.updatePos(body, pointerDelta, deltaMs),
-      body => TPlayer.maybeUpdateFireMode(body, deltaMs),
+      body => TPlayer.updateFiringTrail(body),
       body => TPlayer.maybeUpdateFiring(body, gun, deltaMs)
     )();
   }
@@ -80,11 +80,11 @@ export class PlayerMind implements Mind<Def, BT, Props> {
     const paths = [corners.nw, corners.ne, corners.se, corners.sw];
 
     const color =
-      body.fireMode === 'initial'
+      body.firingState.type === 'initial'
         ? 0xaaaaaa
-        : body.fireMode === 'shot'
+        : body.firingState.type === 'shot-firing'
         ? 0x4444aa
-        : body.fireMode === 'bomb'
+        : body.firingState.type === 'bomb-charging'
         ? 0xaa4444
         : 0x444444;
 
@@ -118,11 +118,11 @@ export class PlayerMind implements Mind<Def, BT, Props> {
     const paths = [corners.nw, corners.ne, corners.se, corners.sw];
 
     const color =
-      body.fireMode === 'initial'
+      body.firingState.type === 'initial'
         ? 0xaaaaaa
-        : body.fireMode === 'shot'
+        : body.firingState.type === 'shot-firing'
         ? 0x4444aa
-        : body.fireMode === 'bomb'
+        : body.firingState.type === 'bomb-charging'
         ? 0xaa4444
         : 0x444444;
 
