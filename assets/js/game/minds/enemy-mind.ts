@@ -7,6 +7,7 @@ import {
   GameState,
   Graphic,
   Im,
+  LevelHelper,
   Mind,
   MindArgs,
   Result,
@@ -23,15 +24,17 @@ import {unit} from '../constants';
 type Def = DataDef;
 type BT = 'enemy';
 type Props = {
+  rank: number;
   gun: EnemyGunTrain;
   target: Result<Player>;
 };
 
 export class EnemyMind implements Mind<Def, BT, Props> {
   calcProps(state: GameState<Def>, body: Body<Def, BT>): Props {
+    const {rank} = LevelHelper.getLevel(state);
     const {gun} = DynamicSourceHelper.fetchB(state, 'enemyGuns', body.gunId, {});
     const target = this.searchTargetForProps(state, body);
-    return {gun, target};
+    return {rank, gun, target};
   }
 
   private searchTargetForProps(state: GameState<Def>, _body: Body<Def, BT>): Result<Player> {
@@ -42,12 +45,12 @@ export class EnemyMind implements Mind<Def, BT, Props> {
 
   updateBody(body: Body<Def, BT>, args: MindArgs, props: Props): Body<Def, BT> {
     const {deltaMs} = args;
-    const {gun, target} = props;
+    const {rank, gun, target} = props;
 
     return Im.pipe(
       () => body,
       body => TEnemy.updateElapsedTime(body, deltaMs),
-      body => TEnemy.maybeUpdateFiring(body, {deltaMs, gun, target})
+      body => TEnemy.maybeUpdateFiring(body, {deltaMs, rank, gun, target})
     )();
   }
 

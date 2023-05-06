@@ -66,12 +66,14 @@ export class TEnemy {
     return Im.update(body, 'elapsedMs', t => t + deltaMs);
   }
 
-  static maybeUpdateFiring(body: Enemy, opt: {deltaMs: number; gun: EnemyGunTrain; target: Result<Player>}): Enemy {
-    const {deltaMs, gun, target} = opt;
+  static maybeUpdateFiring(
+    body: Enemy,
+    opt: {deltaMs: number; rank: number; gun: EnemyGunTrain; target: Result<Player>}
+  ): Enemy {
+    const {deltaMs, gun, target, rank} = opt;
 
     if (!this.shouldFire(body, target)) return body;
 
-    const rank = 0; // TODO: get rank
     const basePos = body.pos;
     const baseAngleRad = this.calcFireAngleRad(body, target);
     const r = TGunTrainState.update(body.shotFiring.state, gun, {rank, baseAngleRad, basePos}, {deltaMs, loop: true});

@@ -7,11 +7,12 @@ type Def = DataDef;
 export type AiotLevel = DefineLevel<{
   state: GameProgressState;
   elapsedTimeMs: number;
+  rank: number;
 }>;
 
 export class TAiotLevel {
   static new(): AiotLevel {
-    return {state: GameProgressAutomaton.new(), elapsedTimeMs: 0};
+    return {state: GameProgressAutomaton.new(), elapsedTimeMs: 0, rank: 0};
   }
 
   static update(level: AiotLevel, deltaMs: number, state: GameState<Def>): AiotLevel {
@@ -76,4 +77,16 @@ export class TAiotLevel {
     }
     return level;
   }
+
+  static addRank(level: AiotLevel, value: number): AiotLevel {
+    return Im.update(level, 'rank', r => clamp(r + value, 0, 100));
+  }
+
+  static getRankRate(level: AiotLevel): number {
+    return clamp(level.rank / 100, 0, 1);
+  }
 }
+
+const clamp = (v: number, min: number, max: number): number => {
+  return Math.min(max, Math.max(min, v));
+};

@@ -7,13 +7,13 @@ const GF = TGunFactory;
 // const Util = TGunTrainUtility;
 
 const rawGun = GF.terminal<GT>({
-  durationMs: 1000,
-  calcFireTimes(_props) {
-    return 20;
+  durationMs: 10000,
+  calcFireTimes({rank}) {
+    return 10 + Math.floor((rank / 100) * 20);
   },
-  calcValues({baseAngleRad, basePos}, _args) {
+  calcValues({baseAngleRad, basePos, rank}, _args) {
     const angleRad = baseAngleRad;
-    const speedMlt = 1;
+    const speedMlt = 1 + 2 * (rank / 100);
 
     return [
       {
