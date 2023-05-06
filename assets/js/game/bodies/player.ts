@@ -76,6 +76,9 @@ export class TPlayer {
   }
 
   static maybeUpdateFiring(body: Player, gun: PlayerGunTrain, deltaMs: number): Player {
+    if (body.hitLog.size > 0) return body;
+    if (body.isDead) return body;
+
     return {
       ...body,
       firingState: PlayerFiringAutomaton.emitEvent(body.firingState, {
@@ -88,6 +91,9 @@ export class TPlayer {
   }
 
   static maybeChargeBomb(body: Player, deltaMs: number, bombChargeTimeMsMax: number): Player {
+    if (body.hitLog.size > 0) return body;
+    if (body.isDead) return body;
+
     return {
       ...body,
       firingState: PlayerFiringAutomaton.emitEvent(body.firingState, {
