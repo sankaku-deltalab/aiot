@@ -42,10 +42,23 @@ class Handler implements EventHandler<Def> {
         )();
       }
       case 'charge-bomb': {
-        return Im.pipe(
+        const chargedState = Im.pipe(
           () => state,
           state => this.maybeChargeBomb(state, event)
         )();
+
+        if (
+          state.type === 'bomb-charging' &&
+          state.chargeTimeMsMax !== undefined &&
+          state.chargeTimeMs >= state.chargeTimeMsMax
+        ) {
+          return {
+            type: 'bomb-firing',
+            moveTrail: state.moveTrail,
+            shotFireState: state.shotFireState,
+          };
+        }
+        return chargedState;
       }
       // TODO: impl bomb
     }
@@ -168,5 +181,9 @@ export class PlayerFiringAutomaton {
     if (state.chargeTimeMsMax === undefined) return 0;
 
     return state.chargeTimeMs / state.chargeTimeMsMax;
+  }
+
+  static shouldFireBomb(state: PlayerFiringState): boolean {
+    return this.getBombChargeRate(state) >= 1;
   }
 }
