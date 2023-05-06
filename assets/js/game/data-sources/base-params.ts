@@ -20,6 +20,13 @@ export type BaseParams = DefineDataSourceItem<{
   'enemy_bullet.collision_size': number;
   'enemy_bullet.rendering_size': number;
   'enemy_bullet.speed_unit': number;
+  // enemy_spawning
+  'enemy_spawning.alpha.charge_amount_per_sec.min': number;
+  'enemy_spawning.alpha.charge_amount_per_sec.max': number;
+  'enemy_spawning.not_alpha.charge_amount_per_sec.min': number;
+  'enemy_spawning.not_alpha.charge_amount_per_sec.max': number;
+  'enemy_spawning.charge_amount_by_enemy_death.min': number;
+  'enemy_spawning.charge_amount_by_enemy_death.max': number;
   // rank
   'rank.rank_when_kill_enemy_by_bomb': number;
   'rank.rank_when_fire_bomb': number;
@@ -45,6 +52,13 @@ export const defaultBaseParams: BaseParams[] = [
     'enemy_bullet.collision_size': unit / 8,
     'enemy_bullet.rendering_size': unit / 4,
     'enemy_bullet.speed_unit': 2,
+    // enemy_spawning
+    'enemy_spawning.alpha.charge_amount_per_sec.min': 200,
+    'enemy_spawning.alpha.charge_amount_per_sec.max': 400,
+    'enemy_spawning.not_alpha.charge_amount_per_sec.min': 100,
+    'enemy_spawning.not_alpha.charge_amount_per_sec.max': 300,
+    'enemy_spawning.charge_amount_by_enemy_death.min': 50,
+    'enemy_spawning.charge_amount_by_enemy_death.max': 100,
     // rank
     'rank.rank_when_kill_enemy_by_bomb': 2,
     'rank.rank_when_fire_bomb': 10,

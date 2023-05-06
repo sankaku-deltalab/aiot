@@ -1,6 +1,7 @@
-import {BodiesHelper, DataSourceHelper, DefineLevel, GameState, Im} from 'curtain-call3';
+import {BodiesHelper, BodyAttrs, DataSourceHelper, DefineLevel, GameState, Im} from 'curtain-call3';
 import {GameProgressAutomaton, GameProgressState} from './level-components/game-progress-automaton';
 import {DataDef} from './data-def';
+import {EnemySpawner, TEnemySpawner} from './level-components/enemy-spawner';
 
 type Def = DataDef;
 
@@ -8,11 +9,12 @@ export type AiotLevel = DefineLevel<{
   state: GameProgressState;
   elapsedTimeMs: number;
   rank: number;
+  enemySpawner: EnemySpawner;
 }>;
 
 export class TAiotLevel {
   static new(): AiotLevel {
-    return {state: GameProgressAutomaton.new(), elapsedTimeMs: 0, rank: 0};
+    return {state: GameProgressAutomaton.new(), elapsedTimeMs: 0, rank: 0, enemySpawner: TEnemySpawner.new()};
   }
 
   static update(level: AiotLevel, deltaMs: number, state: GameState<Def>): AiotLevel {
@@ -22,7 +24,8 @@ export class TAiotLevel {
       level => this.maybeEndIntro(level, deltaMs, state),
       level => this.maybeGameClear(level, deltaMs, state),
       level => this.maybeStartPlayerDeath(level, deltaMs, state),
-      level => this.maybeEndPlayerDeath(level, deltaMs, state)
+      level => this.maybeEndPlayerDeath(level, deltaMs, state),
+      level => this.updateEnemySpawningCharge(level, deltaMs, state)
     )();
   }
 
@@ -76,6 +79,28 @@ export class TAiotLevel {
       return Im.update(level, 'state', s => GameProgressAutomaton.emitEvent(s, {type: 'player-completely-dead'}));
     }
     return level;
+  }
+
+  private static updateEnemySpawningCharge(level: AiotLevel, deltaMs: number, state: GameState<Def>): AiotLevel {
+    if (level.state.type !== 'playing') return level;
+
+    const chargeAmountPerSecAlpha = TEnemySpawner.getChargeAmountPerSecByTimeAlpha(state);
+    const chargeAmountPerSecNotAlpha = TEnemySpawner.getChargeAmountPerSecByTimeNotAlpha(state);
+
+    return Im.update(level, 'enemySpawner', es =>
+      TEnemySpawner.chargeByTime(es, {chargeAmountPerSecAlpha, chargeAmountPerSecNotAlpha, deltaMs})
+    );
+  }
+
+  static consumeEnemySpawning(level: AiotLevel, state: GameState<Def>): [AiotLevel, BodyAttrs<Def, 'enemy'>[]] {
+    const [newSpawner, enemies] = TEnemySpawner.consumeSpawning(level.enemySpawner, state);
+    return [Im.update(level, 'enemySpawner', () => newSpawner), enemies];
+  }
+
+  static chargeEnemySpawningByEnemyDeath(level: AiotLevel, state: GameState<Def>): AiotLevel {
+    const chargeAmount = TEnemySpawner.getChargeAmountByEnemyDeath(state);
+
+    return Im.update(level, 'enemySpawner', es => TEnemySpawner.chargeByEnemyDeath(es, {chargeAmount}));
   }
 
   static addRank(level: AiotLevel, value: number): AiotLevel {

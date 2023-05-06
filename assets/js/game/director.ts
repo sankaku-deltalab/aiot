@@ -8,12 +8,9 @@ import {
   Im,
   BodiesHelper,
   TVec2d,
-  DataSourceHelper,
 } from 'curtain-call3';
 import {DataDef} from './data-def';
 import {TPlayer} from './bodies/player';
-import {gameAreaSize, unit} from './constants';
-import {TEnemy} from './bodies/enemy';
 import {TAiotLevel} from './level';
 
 type Def = DataDef;
@@ -55,24 +52,12 @@ export class AiotDirector implements Director<Def> {
     if (LevelHelper.getLevel(state).state.type !== 'playing') return state;
     if (args.deltaMs <= 0) return state;
 
-    const shouldSpawn = Math.random() * 60 < 1;
-    if (!shouldSpawn) return state;
-
-    const spawnPos = {x: (Math.random() - 0.5) * gameAreaSize.x, y: Math.random() * -0.5 * gameAreaSize.y};
-    const stats = DataSourceHelper.fetchB(state, 'enemyStats', 'alpha');
-    const collisionSize = TVec2d.mlt({x: stats.collision_size_unit_x, y: stats.collision_size_unit_y}, unit);
-    const enemy = TEnemy.newAttrs({
-      pos: spawnPos,
-      statId: stats.id,
-      health: stats.health,
-      collisionSize,
-      gunId: stats.gunId,
-      startFireDelayMs: 500,
-    });
+    const [newLevel, enemies] = TAiotLevel.consumeEnemySpawning(LevelHelper.getLevel(state), state);
 
     return Im.pipe(
       () => state,
-      state => BodiesHelper.addBodyFromAttrsB(state, enemy).state
+      state => BodiesHelper.addBodiesFromAttrsB(state, enemies).state,
+      state => LevelHelper.putLevel(state, newLevel)
     )();
   }
 
