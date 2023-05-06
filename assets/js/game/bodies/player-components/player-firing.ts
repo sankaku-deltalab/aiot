@@ -18,12 +18,17 @@ type PlayerFiringProgressDef = DefineFuncmataDefinition<{
     | {type: 'player-moved'; bodyPos: Vec2d; bodyElapsedMs: number}
     | {type: 'process-shot-firing'; bodyPos: Vec2d; bodyDeltaMs: number; gun: PlayerGunTrain}
     | {type: 'charge-bomb'; bodyDeltaMs: number; chargeTimeMsMax: number}
-    | {type: 'fires-consumed'}
-    | {type: 'player-completely-dead'}
-    | {type: 'game-time-up'};
+    | {type: 'bomb-finished'};
 }>;
 
 type Def = PlayerFiringProgressDef;
+
+const extractCommonState = (state: PlayerFiringState): Pick<PlayerFiringState, 'moveTrail' | 'shotFireState'> => {
+  return {
+    moveTrail: state.moveTrail,
+    shotFireState: state.shotFireState,
+  };
+};
 
 class Handler implements EventHandler<Def> {
   handleEvent(event: PlayerFiringEvent, state: PlayerFiringState): PlayerFiringState {
@@ -60,9 +65,13 @@ class Handler implements EventHandler<Def> {
         }
         return chargedState;
       }
-      // TODO: impl bomb
+      case 'bomb-finished': {
+        return Im.pipe(
+          () => state,
+          state => this.maybeFinishBomb(state)
+        )();
+      }
     }
-    return state;
   }
 
   private updateTrail(state: PlayerFiringState, event: PlayerFiringEvent): PlayerFiringState {
@@ -148,6 +157,15 @@ class Handler implements EventHandler<Def> {
       ...state,
       chargeTimeMs: state.chargeTimeMs + event.bodyDeltaMs,
       chargeTimeMsMax: event.chargeTimeMsMax,
+    };
+  }
+
+  private maybeFinishBomb(state: PlayerFiringState): PlayerFiringState {
+    if (state.type !== 'bomb-charging') return state;
+
+    return {
+      ...extractCommonState(state),
+      type: 'after-bomb',
     };
   }
 }
