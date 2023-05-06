@@ -1,4 +1,4 @@
-import {DefineDataSourceItem, Vec2d} from 'curtain-call3';
+import {DefineDataSourceItem} from 'curtain-call3';
 
 export type EnemyStats = DefineDataSourceItem<{
   id: string;
@@ -12,8 +12,15 @@ export const defaultEnemyStats: EnemyStats[] = [
   {
     id: 'alpha',
     health: 100,
-    collision_size_unit_x: 1,
-    collision_size_unit_y: 1,
+    collision_size_unit_x: 0.5,
+    collision_size_unit_y: 0.5,
     gunId: 'alpha',
+  },
+  {
+    id: 'beta_1',
+    health: 200,
+    collision_size_unit_x: 1,
+    collision_size_unit_y: 0.5,
+    gunId: 'beta_1',
   },
 ];

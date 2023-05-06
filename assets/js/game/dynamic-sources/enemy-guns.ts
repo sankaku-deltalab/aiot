@@ -1,13 +1,8 @@
-import {
-  DefineDynamicSourceItem,
-  DefineDynamicSourceProps,
-  DynamicSourceFunction,
-  DynamicSourceId,
-  GameState,
-} from 'curtain-call3';
+import {DefineDynamicSourceItem, DefineDynamicSourceProps, DynamicSourceFunction, DynamicSourceId} from 'curtain-call3';
 import {DataDef} from '../data-def';
 import {EnemyGunTrain} from '../bodies/enemy-components/enemy-gun';
 import {enemyGunAlpha} from '../bodies/enemy-components/enemy-guns/enemy-gun-alpha';
+import {enemyGunBeta1} from '../bodies/enemy-components/enemy-guns/enemy-gun-beta-1';
 
 type Def = DataDef;
 type Type = 'enemyGuns';
@@ -19,5 +14,6 @@ export type EnemyGunItem = DefineDynamicSourceItem<{
 }>;
 
 export const enemyGunDynamicSource: Record<DynamicSourceId<Def, Type>, DynamicSourceFunction<Def, Type>> = {
-  alpha: (props: EnemyGunProps, state: GameState<Def>) => ({id: 'alpha', gun: enemyGunAlpha}),
+  alpha: (_props, _state) => ({id: 'alpha', gun: enemyGunAlpha}),
+  beta_1: (_props, _state) => ({id: 'beta_1', gun: enemyGunBeta1}),
 };

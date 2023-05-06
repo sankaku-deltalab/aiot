@@ -119,14 +119,13 @@ export class TEnemySpawner {
     spawner: EnemySpawner,
     state: GameState<Def>
   ): [EnemySpawner, BodyAttrs<Def, 'enemy'>[]] {
-    // TODO: spawn not alpha
-    const spawnCount = Math.floor(spawner.spawnChargeAlpha / 100);
+    const spawnCount = Math.floor(spawner.spawnChargeNotAlpha / 100);
     const newState = {
       ...spawner,
-      spawnChargeAlpha: spawner.spawnChargeAlpha - spawnCount * 100,
+      spawnChargeNotAlpha: spawner.spawnChargeNotAlpha - spawnCount * 100,
     };
 
-    const stats = DataSourceHelper.fetchB(state, 'enemyStats', 'alpha');
+    const stats = DataSourceHelper.fetchB(state, 'enemyStats', 'beta_1');
     const collisionSize = TVec2d.mlt({x: stats.collision_size_unit_x, y: stats.collision_size_unit_y}, unit);
     const enemiesAttrs = Enum.map(Im.range(0, spawnCount), () => {
       const spawnPos = {x: (Math.random() - 0.5) * gameAreaSize.x, y: Math.random() * -0.5 * gameAreaSize.y};

@@ -63,7 +63,7 @@ export class EnemyMind implements Mind<Def, BT, Props> {
   }
 
   private generateMainGraphic(body: Body<Def, BT>, _props: Props): Graphic<Def> {
-    const rect = TAaRect2d.fromCenterAndSize(TVec2d.zero(), {x: unit / 2, y: unit / 2});
+    const rect = TAaRect2d.fromCenterAndSize(TVec2d.zero(), body.collisionSize);
     const corners = TAaRect2d.corners(rect);
     const paths = [corners.nw, corners.ne, corners.se, corners.sw];
 
