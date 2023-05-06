@@ -87,13 +87,13 @@ export class TPlayer {
     };
   }
 
-  static maybeChargeBomb(body: Player, deltaMs: number): Player {
+  static maybeChargeBomb(body: Player, deltaMs: number, bombChargeTimeMsMax: number): Player {
     return {
       ...body,
       firingState: PlayerFiringAutomaton.emitEvent(body.firingState, {
         type: 'charge-bomb',
         bodyDeltaMs: deltaMs,
-        chargeTimeMsMax: 1000,
+        chargeTimeMsMax: bombChargeTimeMsMax,
       }),
     };
   }
