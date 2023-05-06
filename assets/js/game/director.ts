@@ -86,6 +86,7 @@ export class AiotDirector implements Director<Def> {
     const ended = lv.state.type === 'clear' || lv.state.type === 'game-over';
     return {
       status: ended ? {type: 'ended', finalScore: 0} : {type: 'playing'},
+      rank: lv.rank,
     };
   }
 }
