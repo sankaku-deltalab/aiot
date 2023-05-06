@@ -19,7 +19,7 @@ export class PlayerMindGraphic {
     const paths = [corners.nw, corners.se, corners.ne, corners.sw];
 
     return [
-      this.generateMainGraphic(body, props),
+      ...this.generateMainGraphic(body, props),
       ...this.generateDeathGraphic(body, props),
       ...this.generateBombChargeGraphic(body, props),
       TLineGraphic.create({
@@ -34,7 +34,9 @@ export class PlayerMindGraphic {
     ];
   }
 
-  private static generateMainGraphic(body: Body<Def, BT>, _props: Props): Graphic<Def> {
+  private static generateMainGraphic(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
+    if (body.hitLog.size > 0) return [];
+
     const rect = TAaRect2d.fromCenterAndSize(TVec2d.zero(), playerSize);
     const corners = TAaRect2d.corners(rect);
     const paths = [corners.nw, corners.ne, corners.se, corners.sw];
@@ -46,17 +48,21 @@ export class PlayerMindGraphic {
         ? 0x4444aa
         : body.firingState.type === 'bomb-charging'
         ? 0xaa4444
+        : body.firingState.type === 'bomb-firing'
+        ? 0xaaaa44
         : 0x444444;
 
-    return TLineGraphic.create({
-      key: 'main',
-      pos: body.pos,
-      color: color,
-      thickness: 10,
-      zIndex: 0,
-      paths,
-      closed: true,
-    });
+    return [
+      TLineGraphic.create({
+        key: 'main',
+        pos: body.pos,
+        color: color,
+        thickness: 10,
+        zIndex: 0,
+        paths,
+        closed: true,
+      }),
+    ];
   }
 
   private static generateDeathGraphic(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
@@ -77,14 +83,7 @@ export class PlayerMindGraphic {
     const corners = TAaRect2d.corners(rect);
     const paths = [corners.nw, corners.ne, corners.se, corners.sw];
 
-    const color =
-      body.firingState.type === 'initial'
-        ? 0xaaaaaa
-        : body.firingState.type === 'shot-firing'
-        ? 0x4444aa
-        : body.firingState.type === 'bomb-charging'
-        ? 0xaa4444
-        : 0x444444;
+    const color = 0xaaaaaa;
 
     return [
       TLineGraphic.create({
@@ -109,8 +108,6 @@ export class PlayerMindGraphic {
     const chargeSizeMin = playerSize.x;
     const chargeSizeScaler = rate * chargeSizeMin + (1 - rate) * chargeSizeMax;
     const chargeSize = TVec2d.mlt(TVec2d.one(), chargeSizeScaler);
-
-    console.log(rate, chargeSizeScaler);
 
     const rect = TAaRect2d.fromCenterAndSize(TVec2d.zero(), chargeSize);
     const corners = TAaRect2d.corners(rect);
