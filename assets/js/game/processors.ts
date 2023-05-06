@@ -13,6 +13,10 @@ import {KillEnemyIfShouldDie} from './procedures/kill-enemy-if-should-die';
 import {EnemyFireBullet} from './procedures/enemy-fire-bullet';
 import {BulletHitToPlayer} from './procedures/bullet-hit-to-player';
 import {KillPlayerIfShouldDie} from './procedures/kill-player-if-should-die';
+import {BombMind} from './minds/bomb-mind';
+import {PlayerFireBomb} from './procedures/player-fire-bomb';
+import {BombHitToEnemy} from './procedures/bomb-hit-to-enemy';
+import {BombHitToEnemyBullet} from './procedures/bomb-hit-to-enemy-bullet';
 
 export const processors: AllProcessorsState<DataDef> = {
   director: {director: new AiotDirector()},
@@ -27,12 +31,16 @@ export const processors: AllProcessorsState<DataDef> = {
       player: new PlayerMind(),
       enemy: new EnemyMind(),
       bullet: new BulletMind(),
+      bomb: new BombMind(),
       effect: new EffectMind(),
     },
   },
   procedures: {
     earlyProcedure: [],
     laterProcedure: [
+      new PlayerFireBomb(),
+      new BombHitToEnemy(),
+      new BombHitToEnemyBullet(),
       new PlayerFireBullet(),
       new BulletHitToEnemy(),
       new KillEnemyIfShouldDie(),

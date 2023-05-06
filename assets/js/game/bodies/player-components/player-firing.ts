@@ -161,7 +161,7 @@ class Handler implements EventHandler<Def> {
   }
 
   private maybeFinishBomb(state: PlayerFiringState): PlayerFiringState {
-    if (state.type !== 'bomb-charging') return state;
+    if (state.type !== 'bomb-firing') return state;
 
     return {
       ...extractCommonState(state),

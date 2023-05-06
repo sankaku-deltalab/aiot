@@ -106,4 +106,8 @@ export class TPlayer {
   static getBombChargeRate(body: Player): number {
     return PlayerFiringAutomaton.getBombChargeRate(body.firingState);
   }
+
+  static bombFired(body: Player): Player {
+    return Im.update(body, 'firingState', s => PlayerFiringAutomaton.emitEvent(s, {type: 'bomb-finished'}));
+  }
 }
