@@ -1,5 +1,16 @@
-import {BodiesHelper, BodyId, GameState, HitStopHelper, Im, OverlapsReducerProcedure, TVec2d} from 'curtain-call3';
+import {
+  BodiesHelper,
+  BodyId,
+  DataSourceHelper,
+  GameState,
+  HitStopHelper,
+  Im,
+  LevelHelper,
+  OverlapsReducerProcedure,
+  TVec2d,
+} from 'curtain-call3';
 import {DataDef} from '../data-def';
+import {TAiotLevel} from '../level';
 
 type Def = DataDef;
 
@@ -14,15 +25,19 @@ export class BombHitToEnemy extends OverlapsReducerProcedure<Def, 'bomb', 'enemy
     console.log('BombHitToEnemy');
 
     if (maybeBomb.err || maybeEnemy.err) return state;
-    const [bomb, enemy] = [maybeBomb.val, maybeEnemy.val];
+    const [_bomb, enemy] = [maybeBomb.val, maybeEnemy.val];
 
     if (enemy.health <= 0) return state;
     if (enemy.isDead) return state;
+
+    const baseParams = DataSourceHelper.fetchB(state, 'baseParams', 'default');
+    const addingRank = baseParams['rank.rank_when_kill_enemy_by_bomb'];
 
     const damage = 9_999_999;
     const newEnemy = Im.update(enemy, 'health', h => h - damage);
     return Im.pipe(
       () => state,
+      state => LevelHelper.updateLevel(state, lv => TAiotLevel.addRank(lv, addingRank)),
       state => BodiesHelper.putBodies(state, [newEnemy]),
       state =>
         HitStopHelper.addHitStop(state, {

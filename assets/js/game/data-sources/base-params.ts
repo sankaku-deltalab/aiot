@@ -17,6 +17,9 @@ export type BaseParams = DefineDataSourceItem<{
   'enemy_bullet.collision_size': number;
   'enemy_bullet.rendering_size': number;
   'enemy_bullet.speed_unit': number;
+  // rank
+  'rank.rank_when_kill_enemy_by_bomb': number;
+  'rank.rank_when_fire_bomb': number;
 }>;
 
 export const defaultBaseParams: BaseParams[] = [
@@ -36,5 +39,8 @@ export const defaultBaseParams: BaseParams[] = [
     'enemy_bullet.collision_size': unit / 8,
     'enemy_bullet.rendering_size': unit / 4,
     'enemy_bullet.speed_unit': 2,
+    // rank
+    'rank.rank_when_kill_enemy_by_bomb': 2,
+    'rank.rank_when_fire_bomb': 10,
   },
 ];
