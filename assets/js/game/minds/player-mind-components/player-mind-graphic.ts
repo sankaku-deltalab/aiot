@@ -103,7 +103,7 @@ export class PlayerMindGraphic {
     if (body.firingState.type !== 'bomb-charging') return [];
 
     const bombChargeRate = TPlayer.getBombChargeRate(body);
-    const rate = Math.max(0, Math.min(1, bombChargeRate)) ** (1 / 4);
+    const rate = Math.max(0, Math.min(1, bombChargeRate)) ** 4;
 
     const chargeSizeMax = unit * 4;
     const chargeSizeMin = playerSize.x;
