@@ -36,6 +36,8 @@ export class EffectMind implements Mind<Def, BT, Props> {
         return this.generateShotHitGraphics(body, props);
       case 'bomb-hit':
         return this.generateBombHitGraphics(body, props);
+      case 'player-hit':
+        return this.generatePlayerHitGraphics(body, props);
     }
     return [];
   }
@@ -73,6 +75,30 @@ export class EffectMind implements Mind<Def, BT, Props> {
 
     const thickness = (unit / 8) * (1 - TEffect.getLifeRate(body));
     const color = 0xffffff;
+
+    return [
+      TLineGraphic.create({
+        key: 'main',
+        pos,
+        color: color,
+        thickness,
+        zIndex: 0,
+        paths,
+        closed: false,
+      }),
+    ];
+  }
+
+  private generatePlayerHitGraphics(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
+    if (body.payload.type !== 'player-hit') return [];
+
+    const {pos, angleRad, lineLength} = body.payload;
+
+    const offset = TVec2d.fromRadians(angleRad, lineLength / 2);
+    const paths = [offset, TVec2d.mlt(offset, -1)];
+
+    const thickness = (unit / 8) * (1 - TEffect.getLifeRate(body));
+    const color = 0xff0000;
 
     return [
       TLineGraphic.create({
