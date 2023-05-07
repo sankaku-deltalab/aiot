@@ -9,6 +9,7 @@
     "@reduxjs/toolkit": "^1.9.3",
     "buffer": "^6.0.3",
     "curtain-call3": "github:sankaku-deltalab/curtain-call3",
+    "daisyui": "^2.51.6",
     "declarative-pixi": "github:sankaku-deltalab/declarative-pixi",
     "funcmata": "github:sankaku-deltalab/funcmata",
     "gun-train": "github:sankaku-deltalab/gun-train",
