@@ -1,7 +1,15 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';
-import {DefineHookType, TypedViewHookModifier, TypedViewHook} from 'typed-phoenix-live-view-hook';
+import {
+  DefineHookType,
+  TypedViewHookModifier,
+  TypedViewHook,
+  TTypedViewHook,
+  C2SEventKey,
+  C2SEventPayload,
+  C2SEventReply,
+} from 'typed-phoenix-live-view-hook';
 import {store} from '../redux/app/store';
 import App from '../redux/App';
 import {abortGame, startGame} from 'js/redux/features/game/thunk-actions';
@@ -9,7 +17,7 @@ import {abortGame, startGame} from 'js/redux/features/game/thunk-actions';
 export type ClientSiderDef = DefineHookType<{
   el: HTMLElement;
   c2sEvents: {
-    end_game: {payload: {}; reply: {}};
+    end_game: {payload: {final_score: number}; reply: {}};
   };
   s2cEvents: {
     startGame: {payload: {}};
@@ -66,4 +74,15 @@ export class ClientSider implements TypedViewHookModifier<Def> {
     const root = createRoot(hook.el);
     root.unmount();
   }
+}
+
+export namespace ClientSiderApi {
+  export const pushEventPromise = <Key extends C2SEventKey<Def>>(
+    key: Key,
+    payload: C2SEventPayload<Def, Key>
+  ): Promise<[C2SEventReply<Def, Key>, number]> => {
+    const clientSiderId = 'cs';
+    const el = document.getElementById(clientSiderId)!;
+    return TTypedViewHook.pushEventPromise<Def, Key>(el, key, payload);
+  };
 }

@@ -7,6 +7,7 @@ defmodule AiotWeb.GamePageLive.Index do
   # alias Phoenix.LiveView.JS
 
   @type state :: :top | :menu | :in_game | :show_result
+  @type result :: %{final_score: non_neg_integer()}
 
   @doc """
   %%{init: {"flowchart": {"curve" :"cardinal"}}}%%
@@ -29,7 +30,10 @@ defmodule AiotWeb.GamePageLive.Index do
 
     socket =
       socket
-      |> assign(state: :top)
+      |> assign(%{
+        state: :top,
+        result: %{final_score: 0}
+      })
 
     {:ok, socket}
   end
@@ -67,16 +71,15 @@ defmodule AiotWeb.GamePageLive.Index do
   end
 
   @impl true
-  def handle_event("end_game" = ev, params, socket) do
+  def handle_event("end_game" = ev, %{"final_score" => final_score} = params, socket) do
     Logger.info(%{event: ev, params: params})
 
     socket =
       socket
       |> assign(state: :show_result)
+      |> assign(result: %{final_score: final_score})
 
-    # Add game result data to assigns
-
-    {:reply, %{:c => "d", "e" => %{f: 1, g: "h"}}, socket}
+    {:reply, %{}, socket}
   end
 
   @impl true
@@ -124,5 +127,13 @@ defmodule AiotWeb.GamePageLive.Index do
 
   defp state_is?(socket = %Socket{}, state) do
     get_assigned(socket, :state) == state
+  end
+
+  def get_game_opacity_class(state) do
+    case state do
+      :in_game -> "opacity-100"
+      :show_result -> "opacity-20"
+      _ -> "opacity-0"
+    end
   end
 end
