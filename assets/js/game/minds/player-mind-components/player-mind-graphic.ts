@@ -20,7 +20,7 @@ export class PlayerMindGraphic {
 
     return [
       ...this.generateMainGraphic(body, props),
-      ...this.generateDeathGraphic(body, props),
+      // ...this.generateDeathGraphic(body, props),
       ...this.generateBombChargeGraphic(body, props),
       TLineGraphic.create({
         key: 'area',
@@ -100,6 +100,7 @@ export class PlayerMindGraphic {
 
   private static generateBombChargeGraphic(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
     if (body.firingState.type !== 'bomb-charging') return [];
+    if (body.isDead) return [];
 
     const bombChargeRate = TPlayer.getBombChargeRate(body);
     const rate = Math.max(0, Math.min(1, bombChargeRate)) ** 4;
