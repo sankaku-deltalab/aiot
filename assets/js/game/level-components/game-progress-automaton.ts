@@ -5,14 +5,14 @@ type GameProgressDef = DefineFuncmataDefinition<{
   state:
     | {type: 'intro'}
     | {type: 'playing'}
-    | {type: 'player-death-anim'; startEngineTimeMs: number}
-    | {type: 'game-over'}
-    | {type: 'clear'};
+    | {type: 'player-death-anim'; startEngineTimeMs: number; finalScore: number}
+    | {type: 'game-over'; finalScore: number}
+    | {type: 'clear'; finalScore: number};
   event:
     | {type: 'intro-ended'}
-    | {type: 'player-start-dying'; engineTimeMs: number}
+    | {type: 'player-start-dying'; engineTimeMs: number; finalScore: number}
     | {type: 'player-completely-dead'}
-    | {type: 'game-time-up'};
+    | {type: 'game-time-up'; finalScore: number};
 }>;
 
 type Def = GameProgressDef;
@@ -26,15 +26,15 @@ class Handler implements EventHandler<Def> {
     }
     // game clear
     if (event.type === 'game-time-up' && state.type === 'playing') {
-      return {type: 'clear'};
+      return {type: 'clear', finalScore: event.finalScore};
     }
     // player start death
     if (event.type === 'player-start-dying' && state.type === 'playing') {
-      return {type: 'player-death-anim', startEngineTimeMs: event.engineTimeMs};
+      return {type: 'player-death-anim', startEngineTimeMs: event.engineTimeMs, finalScore: event.finalScore};
     }
     // player end death
     if (event.type === 'player-completely-dead' && state.type === 'player-death-anim') {
-      return {type: 'game-over'};
+      return {type: 'game-over', finalScore: state.finalScore};
     }
     return state;
   }

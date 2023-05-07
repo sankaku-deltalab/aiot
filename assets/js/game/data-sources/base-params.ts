@@ -30,6 +30,9 @@ export type BaseParams = DefineDataSourceItem<{
   // rank
   'rank.rank_when_kill_enemy_by_bomb': number;
   'rank.rank_when_fire_bomb': number;
+  // score
+  'score.score_when_shot_hit_to_enemy': number;
+  'score.score_when_bomb_hit_to_enemy': number;
 }>;
 
 export const defaultBaseParams: BaseParams[] = [
@@ -62,5 +65,8 @@ export const defaultBaseParams: BaseParams[] = [
     // rank
     'rank.rank_when_kill_enemy_by_bomb': 2,
     'rank.rank_when_fire_bomb': 10,
+    // score
+    'score.score_when_shot_hit_to_enemy': 1,
+    'score.score_when_bomb_hit_to_enemy': 1,
   },
 ];

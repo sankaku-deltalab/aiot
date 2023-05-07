@@ -7,7 +7,6 @@ import {
   Im,
   LevelHelper,
   OverlapsReducerProcedure,
-  TVec2d,
 } from 'curtain-call3';
 import {DataDef} from '../data-def';
 import {TAiotLevel} from '../level';
@@ -32,12 +31,14 @@ export class BombHitToEnemy extends OverlapsReducerProcedure<Def, 'bomb', 'enemy
 
     const baseParams = DataSourceHelper.fetchB(state, 'baseParams', 'default');
     const addingRank = baseParams['rank.rank_when_kill_enemy_by_bomb'];
+    const addingScore = baseParams['score.score_when_bomb_hit_to_enemy'];
 
     const damage = 9_999_999;
     const newEnemy = Im.update(enemy, 'health', h => h - damage);
     return Im.pipe(
       () => state,
       state => LevelHelper.updateLevel(state, lv => TAiotLevel.addRank(lv, addingRank)),
+      state => LevelHelper.updateLevel(state, lv => TAiotLevel.addScore(lv, addingScore)),
       state => BodiesHelper.putBodies(state, [newEnemy]),
       state =>
         HitStopHelper.addHitStop(state, {

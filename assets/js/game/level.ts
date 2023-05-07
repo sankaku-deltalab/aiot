@@ -10,11 +10,12 @@ export type AiotLevel = DefineLevel<{
   elapsedTimeMs: number;
   rank: number;
   enemySpawner: EnemySpawner;
+  score: number;
 }>;
 
 export class TAiotLevel {
   static new(): AiotLevel {
-    return {state: GameProgressAutomaton.new(), elapsedTimeMs: 0, rank: 0, enemySpawner: TEnemySpawner.new()};
+    return {state: GameProgressAutomaton.new(), elapsedTimeMs: 0, rank: 0, enemySpawner: TEnemySpawner.new(), score: 0};
   }
 
   static update(level: AiotLevel, deltaMs: number, state: GameState<Def>): AiotLevel {
@@ -47,7 +48,9 @@ export class TAiotLevel {
     const introEndTime = params['game_progress.intro_time_ms'];
     const gameClearTime = params['game_progress.game_time_up_duration_ms'] + introEndTime;
     if (level.elapsedTimeMs >= gameClearTime) {
-      return Im.update(level, 'state', s => GameProgressAutomaton.emitEvent(s, {type: 'game-time-up'}));
+      return Im.update(level, 'state', s =>
+        GameProgressAutomaton.emitEvent(s, {type: 'game-time-up', finalScore: level.score})
+      );
     }
     return level;
   }
@@ -60,7 +63,7 @@ export class TAiotLevel {
     const engineTimeMs = state.time.engineTimeMs;
     if (player.isDead) {
       return Im.update(level, 'state', s =>
-        GameProgressAutomaton.emitEvent(s, {type: 'player-start-dying', engineTimeMs})
+        GameProgressAutomaton.emitEvent(s, {type: 'player-start-dying', engineTimeMs, finalScore: level.score})
       );
     }
     return level;
@@ -109,6 +112,10 @@ export class TAiotLevel {
 
   static getRankRate(level: AiotLevel): number {
     return clamp(level.rank / 100, 0, 1);
+  }
+
+  static addScore(level: AiotLevel, value: number): AiotLevel {
+    return Im.update(level, 'score', v => v + value);
   }
 }
 
