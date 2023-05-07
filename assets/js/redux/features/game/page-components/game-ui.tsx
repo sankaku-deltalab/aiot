@@ -14,7 +14,7 @@ export const GameUI: React.FC<{}> = () => {
       <div>Score: {score}</div>
     </div>
   );
-  return <div className="fixed flex w-screen h-screen bg-transparent pointer-events-none">{nwItems}</div>;
+  return <div className="fixed flex w-screen h-screen pointer-events-none">{nwItems}</div>;
 };
 
 export default GameUI;

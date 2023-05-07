@@ -1,26 +1,52 @@
 <div>
-  <div id="cs" phx-update="ignore" phx-hook="ClientSider"></div>
+  <div
+    id="cs"
+    class={if @state in [:in_game, :show_result], do: "", else: "opacity-0"}
+    phx-update="ignore"
+    phx-hook="ClientSider"
+  >
+  </div>
 </div>
 
-<div class="fixed flex flex-col justify-around justify-items-center items-center w-screen h-screen bg-transparent pointer-events-none">
+<div class="fixed pointer-events-none">
   <%= case @state do %>
     <% :top -> %>
-      <div class="text-5xl">Aiot</div>
-      <div class="pointer-events-auto">
-        <button class="btn btn-sm" phx-click="open_menu_from_top">Open menu</button>
-        <button class="btn btn-sm" phx-click="start_game">Start Game</button>
+      <div class="w-screen h-screen flex flex-col justify-around items-center">
+        <article class="prose p-2">
+          <h1>Alpha is only target</h1>
+        </article>
+        <div class="pointer-events-auto">
+          <button class="btn btn-sm" phx-click="open_menu_from_top">Open menu</button>
+          <button class="btn btn-sm" phx-click="start_game">Start Game</button>
+        </div>
       </div>
     <% :menu -> %>
-      <p>menu</p>
-      <div class="pointer-events-auto">
+      <article class="prose w-screen pointer-events-auto p-2">
+        <h2>Alpha is only target</h2>
+        <h2>How to play</h2>
+        <ol>
+          <li>Swipe: Move player.</li>
+          <li>Swipe to upper faster: Start firing.</li>
+          <li>Swipe to bottom faster: Charge bomb.</li>
+        </ol>
+        <h2>Rule</h2>
+        <ol>
+          <li>Time elapsed: Provide larger enemy and less smaller enemy.</li>
+          <li>Destroy enemy: Provide more smaller enemy.</li>
+          <li>Destroy enemy with bomb: Gain more score and raise difficulty.</li>
+          <li>Time up: You clear game.</li>
+          <li>Hit to enemy bullet: You failed game.</li>
+        </ol>
         <button class="btn btn-sm" phx-click="start_game">Start Game</button>
-      </div>
+      </article>
     <% :in_game -> %>
     <% :show_result -> %>
-      <p>show result</p>
-      <div class="pointer-events-auto">
-        <button class="btn btn-sm" phx-click="restart_game_from_result">Restart</button>
-        <button class="btn btn-sm" phx-click="back_to_menu_from_result">Back to menu</button>
+      <div class="w-screen h-screen flex flex-col justify-around items-center">
+        <p>show result</p>
+        <div class="pointer-events-auto">
+          <button class="btn btn-sm" phx-click="back_to_menu_from_result">Back to menu</button>
+          <button class="btn btn-sm" phx-click="restart_game_from_result">Restart</button>
+        </div>
       </div>
   <% end %>
 </div>

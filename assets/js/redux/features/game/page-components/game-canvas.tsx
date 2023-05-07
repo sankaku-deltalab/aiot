@@ -96,7 +96,7 @@ export const GameCanvas: React.FC<Props> = props => {
   return (
     <div className={`${props.heightClass} ${props.widthClass}`} ref={resizerRef}>
       <canvas
-        className="pointer-events-auto"
+        className="absolute pointer-events-auto"
         // width={props.width}
         // height={props.height}
         ref={canvasRef}
