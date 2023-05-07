@@ -44,7 +44,7 @@ export const updateGame =
     });
 
     const ended = representation.status.type === 'ended';
-    dispatch(gameUpdated({newState, ended}));
+    dispatch(gameUpdated({newState, ended, representation}));
 
     if (ended) {
       const el = document.getElementById(clientSiderId)!;

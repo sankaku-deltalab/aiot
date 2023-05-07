@@ -8,12 +8,15 @@ import {
   Im,
   BodiesHelper,
   TVec2d,
+  DataSourceHelper,
 } from 'curtain-call3';
 import {DataDef} from './data-def';
 import {TPlayer} from './bodies/player';
 import {TAiotLevel} from './level';
 
 type Def = DataDef;
+
+const gameEndTime = 10_000;
 
 export class AiotDirector implements Director<Def> {
   applyInput(state: GameState<Def>): GameState<Def> {
@@ -68,10 +71,19 @@ export class AiotDirector implements Director<Def> {
 
   represent(state: GameState<Def>): Representation<Def> {
     const lv = LevelHelper.getLevel(state);
+
+    const params = DataSourceHelper.fetchB(state, 'baseParams', 'default');
+    const introEndTime = params['game_progress.intro_time_ms'];
+    const gameClearTime = params['game_progress.game_time_up_duration_ms'] + introEndTime;
+    const remainingTimeMs = Math.max(0, gameClearTime - lv.elapsedTimeMs);
+
     const ended = lv.state.type === 'clear' || lv.state.type === 'game-over';
+    const status: Representation<Def>['status'] = ended ? {type: 'ended', finalScore: lv.score} : {type: 'playing'};
     return {
-      status: ended ? {type: 'ended', finalScore: 0} : {type: 'playing'},
+      status,
+      remainingTimeMs,
       rank: lv.rank,
+      score: lv.score,
     };
   }
 }

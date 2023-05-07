@@ -37,6 +37,8 @@ export type DataDef = DefineDataDefinition<{
   notifications: {};
   representation: {
     status: {type: 'playing'} | {type: 'ended'; finalScore: number};
+    remainingTimeMs: number;
+    score: number;
     rank: number;
   };
 }>;

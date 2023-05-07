@@ -16,10 +16,6 @@
         <button class="btn btn-sm" phx-click="start_game">Start Game</button>
       </div>
     <% :in_game -> %>
-      <p>game now</p>
-      <div class="pointer-events-auto">
-        <button class="btn btn-sm" phx-click="end_game">End Game instead of client</button>
-      </div>
     <% :show_result -> %>
       <p>show result</p>
       <div class="pointer-events-auto">

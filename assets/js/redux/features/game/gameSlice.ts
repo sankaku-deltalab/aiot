@@ -5,10 +5,10 @@ import {
   CanvasRenderingState,
   CustomInputs,
   Vec2d,
-  TVec2d,
   Im,
   CanvasGraphic,
   GameProcessingHelper,
+  Representation,
 } from 'curtain-call3';
 import {addRawReducers} from 'js/redux/patch-redux-toolkit';
 import {DataDef} from 'js/game/data-def';
@@ -19,9 +19,12 @@ import {AnyDeclarationObject} from 'declarative-pixi';
 import {DecPixiCfg} from '../dec-pixi-cc/cfg';
 
 export type GameSliceState = {
+  // play
   playing: boolean;
   paused: boolean;
+  // cc3
   state: SerializableState<DataDef>;
+  representation?: Representation<DataDef>;
   canvasPointer: RawCanvasPointerState;
   renderingState: CanvasRenderingState;
   customInput: CustomInputs<DataDef>;
@@ -60,10 +63,16 @@ const rawReducers = addRawReducers(gameSlice, {
       paused: false,
     };
   },
-  gameUpdated: (sliceState, {payload}: PayloadAction<{ended: boolean; newState: SerializableState<DataDef>}>) => {
+  gameUpdated: (
+    sliceState,
+    {
+      payload,
+    }: PayloadAction<{ended: boolean; representation: Representation<DataDef>; newState: SerializableState<DataDef>}>
+  ) => {
     return {
       ...sliceState,
       playing: !payload.ended,
+      representation: payload.representation,
       state: payload.newState,
     };
   },
@@ -123,5 +132,17 @@ export const selectGraphicDeclarations = createSelector<[typeof selectGraphics],
     }));
   }
 );
+
+export const selectCurrentScore = createSelector<[typeof selectGameSlice], number>([selectGameSlice], sliceState => {
+  const {representation} = sliceState;
+  if (representation === undefined) return 0;
+  return representation.score;
+});
+
+export const selectRemainingTimeMs = createSelector<[typeof selectGameSlice], number>([selectGameSlice], sliceState => {
+  const {representation} = sliceState;
+  if (representation === undefined) return 0;
+  return representation.remainingTimeMs;
+});
 
 export default gameSlice.reducer;
