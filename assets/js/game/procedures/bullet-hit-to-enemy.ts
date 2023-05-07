@@ -53,7 +53,6 @@ export class BulletHitToEnemy extends OverlapsReducerProcedure<Def, 'bullet', 'e
       x: (Math.random() - 0.5) * 2 * posOffsetMax,
       y: (Math.random() - 0.5) * 2 * posOffsetMax,
     };
-    console.log(posOffset);
     const pos = TVec2d.add(posBase, posOffset);
 
     const angleRad = Math.random() * 2 * Math.PI;

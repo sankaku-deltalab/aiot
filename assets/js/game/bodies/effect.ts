@@ -19,6 +19,7 @@ export type EffectPayload =
       type: 'bomb-hit';
       pos: Vec2d;
       angleRad: number;
+      lineLength: number;
     }
   | {
       type: 'player-hit';
@@ -46,6 +47,25 @@ export namespace TEffect {
       lifeTimeMs: opt.lifeTimeMs,
       payload: {
         type: 'shot-hit',
+        pos: opt.pos,
+        angleRad: opt.angleRad,
+        lineLength: opt.lineLength,
+      },
+    };
+  };
+
+  export const newBombHitAttrs = (opt: {
+    pos: Vec2d;
+    angleRad: number;
+    lifeTimeMs: number;
+    lineLength: number;
+  }): EffectAttrs => {
+    return {
+      bodyType: 'effect',
+      elapsedMs: 0,
+      lifeTimeMs: opt.lifeTimeMs,
+      payload: {
+        type: 'bomb-hit',
         pos: opt.pos,
         angleRad: opt.angleRad,
         lineLength: opt.lineLength,
