@@ -56,7 +56,7 @@ export class BombHitToEnemy extends OverlapsReducerProcedure<Def, 'bomb', 'enemy
   private createBombHitEffectAttrs(posBase: Vec2d) {
     const pos = posBase;
     const angleRad = Math.random() * 2 * Math.PI;
-    const lineLength = unit * 13;
+    const lineLength = unit * 128;
 
     return TEffect.newBombHitAttrs({pos, angleRad, lineLength, lifeTimeMs: 100});
   }

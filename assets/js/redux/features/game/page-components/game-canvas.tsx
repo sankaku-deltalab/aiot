@@ -9,6 +9,7 @@ import {ConversionSprite} from '../../dec-pixi-cc/conversions/conversion-sprite'
 import {canvasSizeUpdated, pointerDownedOrUpped, pointerMovedTo} from '../gameSlice';
 import {PointerEvent} from 'react';
 import {updateGame} from '../thunk-actions';
+import {ConversionRect} from '../../dec-pixi-cc/conversions/conversion-rect';
 
 export type Props = {
   widthClass: string;
@@ -47,6 +48,7 @@ export const GameCanvas: React.FC<Props> = props => {
       root: app.stage,
       conversions: {
         'canvas-line': new ConversionLines(),
+        'canvas-rect': new ConversionRect(),
         'canvas-sprite': new ConversionSprite(),
       },
     });

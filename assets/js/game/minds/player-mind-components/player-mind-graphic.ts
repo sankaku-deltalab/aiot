@@ -1,4 +1,4 @@
-import {Body, Graphic, TAaRect2d, TImList, TLineGraphic, TVec2d, Vec2d} from 'curtain-call3';
+import {Body, Graphic, GraphicHelper, TAaRect2d, TImList, TLineGraphic, TVec2d, Vec2d} from 'curtain-call3';
 import {DataDef} from '../../data-def';
 import {gameAreaRect, unit} from '../../constants';
 import {TPlayer} from '../../bodies/player';
@@ -22,15 +22,7 @@ export class PlayerMindGraphic {
       ...this.generateMainGraphic(body, props),
       // ...this.generateDeathGraphic(body, props),
       ...this.generateBombChargeGraphic(body, props),
-      TLineGraphic.create({
-        key: 'area',
-        pos: TVec2d.zero(),
-        color: 0x4444aa,
-        thickness: 10,
-        zIndex: 0,
-        paths,
-        closed: true,
-      }),
+      ...this.generateOutsideGraphics(body, props),
     ];
   }
 
@@ -125,6 +117,43 @@ export class PlayerMindGraphic {
         zIndex: 0,
         paths,
         closed: true,
+      }),
+    ];
+  }
+
+  private static generateOutsideGraphics(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
+    const p = TAaRect2d.corners(gameAreaRect);
+    const offset = unit * 128;
+    const color = 0x222222;
+
+    return [
+      GraphicHelper.createRectGraphic({
+        key: 'outside-n',
+        pos: TVec2d.zero(),
+        color,
+        area: {nw: TVec2d.add(p.nw, {x: -offset, y: -offset}), se: TVec2d.add(p.ne, {x: offset, y: 0})},
+        zIndex: 1,
+      }),
+      GraphicHelper.createRectGraphic({
+        key: 'outside-s',
+        pos: TVec2d.zero(),
+        color,
+        area: {nw: TVec2d.add(p.sw, {x: -offset, y: 0}), se: TVec2d.add(p.se, {x: offset, y: offset})},
+        zIndex: 1,
+      }),
+      GraphicHelper.createRectGraphic({
+        key: 'outside-e',
+        pos: TVec2d.zero(),
+        color,
+        area: {nw: TVec2d.add(p.ne, {x: 0, y: -offset}), se: TVec2d.add(p.se, {x: offset, y: offset})},
+        zIndex: 1,
+      }),
+      GraphicHelper.createRectGraphic({
+        key: 'outside-w',
+        pos: TVec2d.zero(),
+        color,
+        area: {nw: TVec2d.add(p.nw, {x: -offset, y: -offset}), se: TVec2d.add(p.sw, {x: 0, y: offset})},
+        zIndex: 1,
       }),
     ];
   }

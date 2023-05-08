@@ -40,7 +40,7 @@ export class BulletHitToPlayer extends OverlapsReducerProcedure<Def, 'bullet', '
   private createPlayerHitEffectAttrs(posBase: Vec2d) {
     const pos = posBase;
     const angleRad = Math.random() * 2 * Math.PI;
-    const lineLength = unit * 13;
+    const lineLength = unit * 128;
 
     return TEffect.newPlayerHitAttrs({pos, angleRad, lineLength, lifeTimeMs: 100});
   }
