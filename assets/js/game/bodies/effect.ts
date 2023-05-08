@@ -1,4 +1,4 @@
-import {Enum, Im, TVec2d, Vec2d} from 'curtain-call3';
+import {Color, Enum, Im, TVec2d, Vec2d} from 'curtain-call3';
 import {unit} from '../constants';
 
 export type Effect = {
@@ -9,6 +9,38 @@ export type Effect = {
   payload: EffectPayload;
 };
 
+export namespace CuttingEdgeEffect {
+  export type T = {
+    key: string;
+    startTimeMs: number;
+    lifeTimeMs: number;
+    pos: Vec2d;
+    color: Color;
+    zIndex: number;
+    angleRad: {start: number; end: number};
+    lineLength: {start: number; end: number};
+    thickness: {start: number; end: number};
+  };
+
+  export const newEdge = (ce: Omit<T, 'elapsedMs'>): T => {
+    return {...ce};
+  };
+
+  export const endTime = (ce: T): number => {
+    return ce.startTimeMs + ce.lifeTimeMs;
+  };
+
+  export const lifeRate = (ce: T, elapsedMs: number): number => {
+    const lived = elapsedMs - ce.startTimeMs;
+    return Math.max(0, Math.min(1, lived / endTime(ce)));
+  };
+
+  export const isAlive = (ce: T, elapsedMs: number): boolean => {
+    console.log({elapsedMs, endTime: endTime(ce)});
+    return elapsedMs < endTime(ce);
+  };
+}
+
 export type EffectPayload =
   | {
       type: 'shot-hit';
@@ -18,9 +50,7 @@ export type EffectPayload =
     }
   | {
       type: 'bomb-hit';
-      pos: Vec2d;
-      angleRad: number;
-      lineLength: number;
+      edges: CuttingEdgeEffect.T[];
     }
   | {
       type: 'player-hit';
@@ -65,23 +95,66 @@ export namespace TEffect {
     };
   };
 
-  export const newBombHitAttrs = (opt: {
-    pos: Vec2d;
-    angleRad: number;
-    lifeTimeMs: number;
-    lineLength: number;
-  }): EffectAttrs => {
+  export const newBombHitAttrs = (opt: {pos: Vec2d}): EffectAttrs => {
+    const lifeTimeMs = 100;
+    const main = newBombHitEdgeMain(opt, 'main');
+    const sub = newBombHitEdgeSub(opt, 'sub');
+
     return {
       bodyType: 'effect',
       elapsedMs: 0,
-      lifeTimeMs: opt.lifeTimeMs,
+      lifeTimeMs: lifeTimeMs,
       payload: {
         type: 'bomb-hit',
-        pos: opt.pos,
-        angleRad: opt.angleRad,
-        lineLength: opt.lineLength,
+        edges: [main, sub],
       },
     };
+  };
+
+  const newBombHitEdgeMain = (opt: {pos: Vec2d}, key: string): CuttingEdgeEffect.T => {
+    const asRange = (v: number) => ({start: v, end: v});
+    const pos = opt.pos;
+    const angleRad = asRange(Math.random() * 2 * Math.PI);
+    const lineLength = asRange(unit * 128);
+    const color = 0xffffff;
+    const thickness = {start: unit / 8, end: 0};
+    const lifeTimeMs = 100;
+    const zIndex = 10;
+
+    return CuttingEdgeEffect.newEdge({
+      angleRad,
+      color,
+      key,
+      lifeTimeMs,
+      lineLength,
+      pos,
+      startTimeMs: 0,
+      thickness,
+      zIndex,
+    });
+  };
+
+  const newBombHitEdgeSub = (opt: {pos: Vec2d}, key: string): CuttingEdgeEffect.T => {
+    const asRange = (v: number) => ({start: v, end: v});
+    const pos = opt.pos;
+    const angleRad = asRange(Math.random() * 2 * Math.PI);
+    const lineLength = asRange(unit * 128);
+    const color = 0xffffff;
+    const thickness = {start: unit / 16, end: 0};
+    const lifeTimeMs = 100;
+    const zIndex = 10;
+
+    return CuttingEdgeEffect.newEdge({
+      angleRad,
+      color,
+      key,
+      lifeTimeMs,
+      lineLength,
+      pos,
+      startTimeMs: 0,
+      thickness,
+      zIndex,
+    });
   };
 
   export const newPlayerHitAttrs = (opt: {

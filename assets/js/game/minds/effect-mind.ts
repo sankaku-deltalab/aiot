@@ -5,13 +5,14 @@ import {
   Enum,
   GameState,
   Graphic,
+  Im,
   Mind,
   MindArgs,
   TLineGraphic,
   TVec2d,
 } from 'curtain-call3';
 import {DataDef} from '../data-def';
-import {TEffect} from '../bodies/effect';
+import {CuttingEdgeEffect, TEffect} from '../bodies/effect';
 import {unit} from '../constants';
 
 type Def = DataDef;
@@ -44,6 +45,40 @@ export class EffectMind implements Mind<Def, BT, Props> {
     }
   }
 
+  private generateCuttingEdgeGraphics(
+    edges: CuttingEdgeEffect.T[],
+    keyBase: string,
+    elapsedMs: number
+  ): Graphic<Def>[] {
+    console.log(edges);
+    return Im.pipe(
+      () => edges,
+      edges => Enum.filter(edges, ce => CuttingEdgeEffect.isAlive(ce, elapsedMs)),
+      edges =>
+        Enum.map(edges, ce => {
+          const r = CuttingEdgeEffect.lifeRate(ce, elapsedMs) ** (1 / 2);
+
+          const key = `${keyBase}-${ce.key}`;
+          const thickness = r * ce.thickness.end + (1 - r) * ce.thickness.start;
+          const lineLength = r * ce.lineLength.end + (1 - r) * ce.lineLength.start;
+          const angleRad = r * ce.angleRad.end + (1 - r) * ce.angleRad.start;
+
+          const offset = TVec2d.fromRadians(angleRad, lineLength / 2);
+          const paths = [offset, TVec2d.mlt(offset, -1)];
+
+          return TLineGraphic.create({
+            key,
+            pos: ce.pos,
+            color: ce.color,
+            thickness,
+            zIndex: ce.zIndex,
+            paths,
+            closed: false,
+          });
+        })
+    )();
+  }
+
   private generateShotHitGraphics(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
     if (body.payload.type !== 'shot-hit') return [];
     const {pos, angleRad, lineLength} = body.payload;
@@ -69,26 +104,12 @@ export class EffectMind implements Mind<Def, BT, Props> {
 
   private generateBombHitGraphics(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
     if (body.payload.type !== 'bomb-hit') return [];
+    const edges = body.payload.edges;
 
-    const {pos, angleRad, lineLength} = body.payload;
-
-    const offset = TVec2d.fromRadians(angleRad, lineLength / 2);
-    const paths = [offset, TVec2d.mlt(offset, -1)];
-
-    const thickness = (unit / 8) * (1 - TEffect.getLifeRate(body));
-    const color = 0xffffff;
-
-    return [
-      TLineGraphic.create({
-        key: 'main',
-        pos,
-        color: color,
-        thickness,
-        zIndex: 10,
-        paths,
-        closed: false,
-      }),
-    ];
+    return Im.pipe(
+      () => edges,
+      edges => this.generateCuttingEdgeGraphics(edges, 'main', body.elapsedMs)
+    )();
   }
 
   private generatePlayerHitGraphics(body: Body<Def, BT>, _props: Props): Graphic<Def>[] {
