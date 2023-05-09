@@ -36,7 +36,6 @@ export namespace CuttingEdgeEffect {
   };
 
   export const isAlive = (ce: T, elapsedMs: number): boolean => {
-    console.log({elapsedMs, endTime: endTime(ce)});
     return elapsedMs < endTime(ce);
   };
 }

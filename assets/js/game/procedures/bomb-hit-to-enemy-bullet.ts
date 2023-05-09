@@ -11,8 +11,6 @@ export class BombHitToEnemyBullet extends OverlapsReducerProcedure<Def, 'bomb', 
     const maybeBomb = BodiesHelper.fetchBody(state, bombId);
     const maybeBullet = BodiesHelper.fetchBody(state, bulletId);
 
-    console.log('BombHitToEnemy');
-
     if (maybeBomb.err || maybeBullet.err) return state;
     const [bomb, bullet] = [maybeBomb.val, maybeBullet.val];
 
