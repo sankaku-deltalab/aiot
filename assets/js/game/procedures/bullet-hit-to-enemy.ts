@@ -32,7 +32,7 @@ export class BulletHitToEnemy extends OverlapsReducerProcedure<Def, 'bullet', 'e
     if (enemy.isDead) return state;
 
     const baseParams = DataSourceHelper.fetchB(state, 'baseParams', 'default');
-    const addingScore = baseParams['score.score_when_bomb_hit_to_enemy'];
+    const addingScore = baseParams['score.score_when_shot_hit_to_enemy'];
 
     const newEnemy = Im.update(enemy, 'health', h => h - bullet.damage);
     const newBullet = Im.update(bullet, 'isHit', () => true);
