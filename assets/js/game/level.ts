@@ -106,7 +106,6 @@ export class TAiotLevel {
     if (BodiesHelper.getFirstBodyInType(state, 'bomb').ok) return level;
 
     const chargeAmount = TEnemySpawner.getChargeAmountByEnemyDeath(state);
-    console.log({chargeAmount});
 
     return Im.update(level, 'enemySpawner', es => TEnemySpawner.chargeByEnemyDeath(es, {chargeAmount}));
   }
