@@ -2,6 +2,7 @@ import {BodiesHelper, BodyAttrs, DataSourceHelper, DefineLevel, GameState, Im} f
 import {GameProgressAutomaton, GameProgressState} from './level-components/game-progress-automaton';
 import {DataDef} from './data-def';
 import {EnemySpawner, TEnemySpawner} from './level-components/enemy-spawner';
+import {Enemy} from './bodies/enemy';
 
 type Def = DataDef;
 
@@ -100,8 +101,12 @@ export class TAiotLevel {
     return [Im.update(level, 'enemySpawner', () => newSpawner), enemies];
   }
 
-  static chargeEnemySpawningByEnemyDeath(level: AiotLevel, state: GameState<Def>): AiotLevel {
+  static chargeEnemySpawningByEnemyDeath(level: AiotLevel, deadEnemy: Enemy, state: GameState<Def>): AiotLevel {
+    if (deadEnemy.statId === 'alpha') return level;
+    if (BodiesHelper.getFirstBodyInType(state, 'bomb').ok) return level;
+
     const chargeAmount = TEnemySpawner.getChargeAmountByEnemyDeath(state);
+    console.log({chargeAmount});
 
     return Im.update(level, 'enemySpawner', es => TEnemySpawner.chargeByEnemyDeath(es, {chargeAmount}));
   }

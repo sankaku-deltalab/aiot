@@ -1,5 +1,6 @@
-import {BodiesHelper, BodiesReducerProcedure, Body, GameState, Im} from 'curtain-call3';
+import {BodiesHelper, BodiesReducerProcedure, Body, GameState, Im, LevelHelper} from 'curtain-call3';
 import {DataDef} from '../data-def';
+import {TAiotLevel} from '../level';
 
 type Def = DataDef;
 type BT = 'enemy';
@@ -15,9 +16,14 @@ export class KillEnemyIfShouldDie extends BodiesReducerProcedure<Def, 'enemy'> {
     const shouldDie = enemy.health <= 0;
     if (!shouldDie) return state;
 
-    return BodiesHelper.putBody(
-      state,
-      Im.update(enemy, 'isDead', () => true)
-    );
+    return Im.pipe(
+      () => state,
+      state => LevelHelper.updateLevel(state, lv => TAiotLevel.chargeEnemySpawningByEnemyDeath(lv, enemy, state)),
+      state =>
+        BodiesHelper.putBody(
+          state,
+          Im.update(enemy, 'isDead', () => true)
+        )
+    )();
   }
 }
