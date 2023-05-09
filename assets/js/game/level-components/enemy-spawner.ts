@@ -101,7 +101,10 @@ export class TEnemySpawner {
     const stats = DataSourceHelper.fetchB(state, 'enemyStats', 'alpha');
     const collisionSize = TVec2d.mlt({x: stats.collision_size_unit_x, y: stats.collision_size_unit_y}, unit);
     const enemiesAttrs = Enum.map(Im.range(0, spawnCount), () => {
-      const spawnPos = {x: (Math.random() - 0.5) * gameAreaSize.x, y: Math.random() * -0.5 * gameAreaSize.y};
+      const spawnPos = {
+        x: (Math.random() - 0.5) * (gameAreaSize.x - unit),
+        y: Math.random() * -0.5 * gameAreaSize.y + unit / 2,
+      };
       return TEnemy.newAttrs({
         pos: spawnPos,
         statId: stats.id,
