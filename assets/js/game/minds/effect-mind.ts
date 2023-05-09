@@ -50,7 +50,6 @@ export class EffectMind implements Mind<Def, BT, Props> {
     keyBase: string,
     elapsedMs: number
   ): Graphic<Def>[] {
-    console.log(edges);
     return Im.pipe(
       () => edges,
       edges => Enum.filter(edges, ce => CuttingEdgeEffect.isAlive(ce, elapsedMs)),
