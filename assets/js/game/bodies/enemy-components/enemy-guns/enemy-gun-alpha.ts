@@ -13,7 +13,7 @@ const rawGun = GF.terminal<GT>({
   },
   calcValues({baseAngleRad, basePos, rank}, _args) {
     const angleRad = baseAngleRad;
-    const speedMlt = 1 + 2 * (rank / 100);
+    const speedMlt = 1 + 1.5 * (rank / 100);
 
     return [
       {
