@@ -13,6 +13,7 @@ import {
 import {DataDef} from './data-def';
 import {TPlayer} from './bodies/player';
 import {TAiotLevel} from './level';
+import {unit} from './constants';
 
 type Def = DataDef;
 
@@ -36,7 +37,7 @@ export class AiotDirector implements Director<Def> {
     const isFirstUpdate = LevelHelper.getLevel(state).elapsedTimeMs === 0;
     if (!isFirstUpdate) return state;
 
-    const player = TPlayer.newAttrs({pos: TVec2d.zero()});
+    const player = TPlayer.newAttrs({pos: {x: 0, y: 2 * unit}});
 
     return Im.pipe(
       () => state,
