@@ -8,15 +8,15 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
     "buffer": "^6.0.3",
-    "curtain-call3": "github:sankaku-deltalab/curtain-call3",
+    "curtain-call3": "github:sankaku-deltalab/curtain-call3#f2befaf",
     "daisyui": "^2.51.6",
-    "declarative-pixi": "github:sankaku-deltalab/declarative-pixi",
-    "funcmata": "github:sankaku-deltalab/funcmata",
-    "gun-train": "github:sankaku-deltalab/gun-train",
+    "declarative-pixi": "github:sankaku-deltalab/declarative-pixi#17c00cd",
+    "funcmata": "github:sankaku-deltalab/funcmata#5514215",
+    "gun-train": "github:sankaku-deltalab/gun-train#929fac2",
     "pixi.js": "^7.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
-    "typed-phoenix-live-view-hook": "github:sankaku-deltalab/typed-phoenix-live-view-hook"
+    "typed-phoenix-live-view-hook": "github:sankaku-deltalab/typed-phoenix-live-view-hook#9a08739"
   }
 }
